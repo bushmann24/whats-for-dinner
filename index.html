@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Pick App</title>
+    <style>
+        :root {
+            --primary: #ff4b4b;
+            --bg: #f4f4f9;
+            --card-bg: #ffffff;
+            --text: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-nav {
+            background-color: #eee;
+            color: #333;
+        }
+
+        .btn-nav:hover { background-color: #ddd; }
+
+        /* Main Container */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Views */
+        .view {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        .view.active {
+            display: flex;
+        }
+
+        /* Swipe Card Style */
+        .card-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            width: 100%;
+            height: 60vh;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card img {
+            width: 100%;
+            height: 80%;
+            object-fit: cover;
+        }
+
+        .card-info {
+            padding: 15px;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-info h2 {
+            font-size: 1.5rem;
+        }
+
+        /* Swipe Controls */
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 0;
+        }
+
+        .btn-no, .btn-yes {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-no { color: #ff4b4b; border: 2px solid #ff4b4b; }
+        .btn-yes { color: #4CAF50; border: 2px solid #4CAF50; }
+        .btn-no:active { background: #ff4b4b; color: white; }
+        .btn-yes:active { background: #4CAF50; color: white; }
+
+        /* Settings & Results */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .btn-secondary {
+            background-color: #4CAF50;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        ul#yesses-list {
+            list-style: none;
+            overflow-y: auto;
+            flex: 1;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+        }
+
+        ul#yesses-list li {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        ul#yesses-list li img {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #777;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Food Pick App</h1>
+        <div>
+            <button class="btn-nav" onclick="startOver()">Home</button>
+            <button class="btn-nav" onclick="switchView('settings-view')">Settings</button>
+        </div>
+    </header>
+
+    <main>
+        <div id="swipe-view" class="view active">
+            <div class="card-container">
+                <div class="card" id="current-card">
+                    <img id="restaurant-img" src="" alt="Restaurant Image">
+                    <div class="card-info">
+                        <h2 id="restaurant-name">Loading...</h2>
+                    </div>
+                </div>
+                <div id="no-cards-msg" class="empty-state" style="display:none;">
+                    <h2>No more restaurants!</h2>
+                    <p>Check your results.</p>
+                </div>
+            </div>
+            <div class="controls" id="controls">
+                <button class="btn-no" onclick="vote(false)">❌</button>
+                <button class="btn-yes" onclick="vote(true)">💚</button>
+            </div>
+        </div>
+
+        <div id="results-view" class="view">
+            <h2>Your Matches</h2>
+            <ul id="yesses-list"></ul>
+            <button class="btn-secondary" onclick="narrowDown()">Narrow it down! (Play again with these)</button>
+            <button class="btn-primary" onclick="startOver()">Restart from scratch</button>
+        </div>
+
+        <div id="settings-view" class="view">
+            <h2>Add New Restaurant</h2>
+            <p style="margin-bottom: 20px; color: #666;">Add a place you want to eat at. Find an image online, right-click, and copy the image address (URL).</p>
+            
+            <div class="form-group">
+                <input type="text" id="new-name" placeholder="Restaurant Name (e.g. McDonald's)">
+            </div>
+            <div class="form-group">
+                <input type="text" id="new-url" placeholder="Image URL (http://...)">
+            </div>
+            
+            <button class="btn-primary" onclick="addRestaurant()">Add Restaurant</button>
+            
+            <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
+            
+            <button class="btn-nav" onclick="clearCustomData()" style="color: red;">Delete all custom restaurants</button>
+        </div>
+    </main>
+
+    <script>
+        // --- DATA SETUP ---
+        // Some default restaurants to get started
+        const defaultRestaurants = [
+            { name: "McDonald's", image: "https://images.unsplash.com/photo-1619985732152-7b561c71dddc?auto=format&fit=crop&w=600&q=80" },
+            { name: "Local Pizza", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80" },
+            { name: "Sushi Spot", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80" },
+            { name: "Burger King", image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=600&q=80" }
+        ];
+
+        let allRestaurants = [];
+        let currentQueue = [];
+        let yesses = [];
+
+        // --- INITIALIZATION ---
+        function initApp() {
+            loadRestaurants();
+            startOver();
+        }
+
+        // Load custom restaurants from Local Storage and combine with defaults
+        function loadRestaurants() {
+            const saved = localStorage.getItem('foodPick_restaurants');
+            if (saved) {
+                allRestaurants = [...defaultRestaurants, ...JSON.parse(saved)];
+            } else {
+                allRestaurants = [...defaultRestaurants];
+            }
+        }
+
+        // --- LOGIC ---
+        function startOver() {
+            currentQueue = [...allRestaurants];
+            yesses = [];
+            shuffleArray(currentQueue); // Mix them up!
+            switchView('swipe-view');
+            renderCard();
+        }
+
+        function narrowDown() {
+            if (yesses.length === 0) {
+                alert("You didn't say yes to anything! Restarting from scratch.");
+                startOver();
+                return;
+            }
+            if (yesses.length === 1) {
+                alert(`You only have one choice left! Looks like you're eating at ${yesses[0].name}!`);
+                return;
+            }
+            currentQueue = [...yesses]; // Set queue to only the "yesses"
+            yesses = []; // Clear the yes list for the new round
+            shuffleArray(currentQueue);
+            switchView('swipe-view');
+            renderCard();
+        }
+
+        function renderCard() {
+            const cardEl = document.getElementById('current-card');
+            const noCardsMsg = document.getElementById('no-cards-msg');
+            const controls = document.getElementById('controls');
+
+            if (currentQueue.length === 0) {
+                // Out of cards
+                cardEl.style.display = 'none';
+                controls.style.display = 'none';
+                noCardsMsg.style.display = 'block';
+                showResults();
+                return;
+            }
+
+            // Show current card
+            cardEl.style.display = 'flex';
+            controls.style.display = 'flex';
+            noCardsMsg.style.display = 'none';
+
+            const current = currentQueue[0];
+            document.getElementById('restaurant-img').src = current.image;
+            document.getElementById('restaurant-name').innerText = current.name;
+        }
+
+        function vote(isYes) {
+            const current = currentQueue.shift(); // Remove from front of queue
+            
+            if (isYes) {
+                yesses.push(current);
+            }
+
+            // Show next card or results
+            renderCard();
+        }
+
+        function showResults() {
+            const listEl = document.getElementById('yesses-list');
+            listEl.innerHTML = ''; // Clear old list
+
+            if (yesses.length === 0) {
+                listEl.innerHTML = '<li style="justify-content:center; color:#777;">No matches yet!</li>';
+            } else {
+                yesses.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<img src="${item.image}" alt="${item.name}"> <strong>${item.name}</strong>`;
+                    listEl.appendChild(li);
+                });
+            }
+
+            switchView('results-view');
+        }
+
+        // --- SETTINGS / ADD DATA ---
+        function addRestaurant() {
+            const nameInput = document.getElementById('new-name');
+            const urlInput = document.getElementById('new-url');
+            
+            const name = nameInput.value.trim();
+            const url = urlInput.value.trim();
+
+            if (!name || !url) {
+                alert("Please enter both a name and an image URL.");
+                return;
+            }
+
+            const newRestaurant = { name: name, image: url };
+            
+            // Get existing custom restaurants, add new one, save back to storage
+            let saved = localStorage.getItem('foodPick_restaurants');
+            let customRestaurants = saved ? JSON.parse(saved) : [];
+            customRestaurants.push(newRestaurant);
+            localStorage.setItem('foodPick_restaurants', JSON.stringify(customRestaurants));
+
+            // Reload data and reset fields
+            loadRestaurants();
+            nameInput.value = '';
+            urlInput.value = '';
+            
+            alert(`${name} added successfully! Restarting the stack so you can vote on it.`);
+            startOver();
+        }
+
+        function clearCustomData() {
+            if(confirm("Are you sure you want to delete all custom restaurants you've added?")) {
+                localStorage.removeItem('foodPick_restaurants');
+                loadRestaurants();
+                startOver();
+            }
+        }
+
+        // --- UTILS ---
+        function switchView(viewId) {
+            document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+        }
+
+        // Fisher-Yates Shuffle
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Run app on load
+        window.onload = initApp;
+    </script>
+</body>
+</html>

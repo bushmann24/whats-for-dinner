@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Food Pick App</title>
+    <title>Whats for Dinner</title>
     <style>
         :root {
             --primary: #ff4b4b;
@@ -26,9 +26,9 @@
             color: var(--text);
             display: flex;
             flex-direction: column;
-            height: 100dvh; /* dvh fixes the cutoff issue on mobile browsers */
+            height: 100dvh;
             overflow: hidden;
-            touch-action: none; /* Prevents pull-to-refresh when swiping */
+            touch-action: none;
         }
 
         header {
@@ -72,7 +72,7 @@
             justify-content: center;
             padding: 20px;
             position: relative;
-            min-height: 0; /* Ensures flexbox shrinks properly */
+            min-height: 0;
         }
 
         /* Views */
@@ -102,8 +102,8 @@
         .card {
             background: var(--card-bg);
             width: 100%;
-            height: 60vh;
-            max-height: 500px;
+            height: 65vh;
+            max-height: 550px;
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
             overflow: hidden;
@@ -123,7 +123,7 @@
             width: 100%;
             height: 75%;
             object-fit: cover;
-            pointer-events: none; /* Prevents image dragging bugs */
+            pointer-events: none;
         }
 
         .card-info {
@@ -139,31 +139,6 @@
         .card-info h2 {
             font-size: 1.5rem;
         }
-
-        /* Swipe Controls */
-        .controls {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0 5px 0;
-            z-index: 10;
-        }
-
-        .btn-no, .btn-yes {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            background: var(--card-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-no { color: #ff4b4b; border: 2px solid #ff4b4b; }
-        .btn-yes { color: #4CAF50; border: 2px solid #4CAF50; }
-        .btn-no:active { background: #ff4b4b; color: white; }
-        .btn-yes:active { background: #4CAF50; color: white; }
 
         /* Settings & Results */
         .form-group {
@@ -245,7 +220,7 @@
 <body>
 
     <header>
-        <h1>Food Pick App</h1>
+        <h1>Whats for Dinner</h1>
         <div>
             <button class="btn-nav" onclick="startOver()">Home</button>
             <button class="btn-nav" onclick="switchView('settings-view')">Settings</button>
@@ -265,10 +240,6 @@
                     <h2>No more restaurants!</h2>
                     <p>Check your results.</p>
                 </div>
-            </div>
-            <div class="controls" id="controls">
-                <button class="btn-no" onclick="vote(false)">❌</button>
-                <button class="btn-yes" onclick="vote(true)">💚</button>
             </div>
         </div>
 
@@ -365,7 +336,6 @@
 
         function renderCard() {
             const noCardsMsg = document.getElementById('no-cards-msg');
-            const controls = document.getElementById('controls');
             
             // Reset card positioning
             cardEl.style.transition = 'none';
@@ -374,14 +344,12 @@
 
             if (currentQueue.length === 0) {
                 cardEl.style.display = 'none';
-                controls.style.display = 'none';
                 noCardsMsg.style.display = 'block';
                 showResults();
                 return;
             }
 
             cardEl.style.display = 'flex';
-            controls.style.display = 'flex';
             noCardsMsg.style.display = 'none';
 
             const current = currentQueue[0];
@@ -475,10 +443,6 @@
             }
             currentX = 0;
         }
-
-        // Override button clicks to use animation
-        document.querySelector('.btn-no').onclick = () => animateVote(false);
-        document.querySelector('.btn-yes').onclick = () => animateVote(true);
 
         // --- SETTINGS / DATA MANAGEMENT ---
         function addRestaurant() {

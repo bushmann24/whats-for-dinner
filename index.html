@@ -46,6 +46,11 @@
             color: var(--primary);
         }
 
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
         button {
             cursor: pointer;
             border: none;
@@ -59,6 +64,8 @@
         .btn-nav {
             background-color: #333;
             color: #fff;
+            padding: 8px 12px;
+            font-size: 0.9rem;
         }
 
         .btn-nav:hover { background-color: #444; }
@@ -69,7 +76,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             padding: 20px;
             position: relative;
             min-height: 0;
@@ -97,6 +104,8 @@
             position: relative;
             width: 100%;
             perspective: 1000px;
+            margin-top: auto;
+            margin-bottom: auto;
         }
 
         .card {
@@ -140,9 +149,9 @@
             font-size: 1.5rem;
         }
 
-        /* Settings & Results */
+        /* Settings & Manage Lists */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
         .form-group input {
@@ -159,8 +168,8 @@
             background-color: var(--primary);
             color: white;
             width: 100%;
-            padding: 15px;
-            margin-top: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
         }
 
         .btn-secondary {
@@ -180,7 +189,15 @@
             margin-top: 10px;
         }
 
-        ul#yesses-list {
+        .btn-delete {
+            background-color: #ff4b4b;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        ul.styled-list {
             list-style: none;
             overflow-y: auto;
             flex: 1;
@@ -190,8 +207,8 @@
             background: var(--card-bg);
         }
 
-        ul#yesses-list li {
-            padding: 15px;
+        ul.styled-list li {
+            padding: 12px;
             border-bottom: 1px solid var(--border);
             font-size: 1.1rem;
             display: flex;
@@ -199,15 +216,22 @@
             gap: 10px;
         }
 
-        ul#yesses-list li:last-child {
+        ul.styled-list li:last-child {
             border-bottom: none;
         }
 
-        ul#yesses-list li img {
+        ul.styled-list li img {
             width: 50px;
             height: 50px;
             border-radius: 8px;
             object-fit: cover;
+        }
+
+        ul.styled-list li strong {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .empty-state {
@@ -215,15 +239,19 @@
             color: var(--secondary-text);
             margin-top: 50px;
         }
+
+        h2 { margin-bottom: 10px; }
+        hr { margin: 20px 0; border: 0; border-top: 1px solid var(--border); }
     </style>
 </head>
 <body>
 
     <header>
         <h1>Whats for Dinner</h1>
-        <div>
+        <div class="nav-buttons">
             <button class="btn-nav" onclick="startOver()">Home</button>
-            <button class="btn-nav" onclick="switchView('settings-view')">Settings</button>
+            <button class="btn-nav" onclick="openManageView()">Manage</button>
+            <button class="btn-nav" onclick="switchView('settings-view')">⚙️</button>
         </div>
     </header>
 
@@ -245,31 +273,37 @@
 
         <div id="results-view" class="view">
             <h2>Your Matches</h2>
-            <ul id="yesses-list"></ul>
+            <ul id="yesses-list" class="styled-list"></ul>
             <button class="btn-secondary" onclick="narrowDown()">Narrow it down!</button>
-            <button class="btn-primary" onclick="startOver()">Restart from scratch</button>
+            <button class="btn-primary" onclick="startOver()" style="margin-top: 10px;">Restart from scratch</button>
         </div>
 
-        <div id="settings-view" class="view" style="overflow-y: auto; padding-bottom: 20px;">
-            <h2>Add New Restaurant</h2>
-            <p style="margin-bottom: 20px; color: var(--secondary-text); font-size: 0.9rem;">Add a place you want to eat at. Find an image online, right-click, and copy the image address.</p>
-            
+        <div id="manage-view" class="view" style="overflow-y: auto; padding-bottom: 20px;">
+            <h2>Add New Place</h2>
             <div class="form-group">
                 <input type="text" id="new-name" placeholder="Restaurant Name (e.g. McDonald's)">
             </div>
             <div class="form-group">
                 <input type="text" id="new-url" placeholder="Image URL (http://...)">
             </div>
-            
             <button class="btn-primary" onclick="addRestaurant()">Add Restaurant</button>
             
-            <hr style="margin: 30px 0; border: 0; border-top: 1px solid var(--border);">
+            <hr>
             
+            <h2>Your Food Stack</h2>
+            <p style="color: var(--secondary-text); font-size: 0.9rem; margin-bottom: 10px;">Here is everything currently in your rotation.</p>
+            <ul id="manage-list" class="styled-list" style="flex: none; max-height: 400px;"></ul>
+        </div>
+
+        <div id="settings-view" class="view">
             <h2>Data Management</h2>
-            <p style="margin-bottom: 15px; color: var(--secondary-text); font-size: 0.9rem;">Copy your custom restaurants to paste into a note, or import them later.</p>
+            <p style="margin-bottom: 15px; color: var(--secondary-text); font-size: 0.9rem;">Backup your list of places or restore an old list.</p>
             <button class="btn-outline" onclick="exportData()">📋 Copy My Data</button>
             <button class="btn-outline" onclick="importData()">📥 Import Data</button>
-            <button class="btn-outline" onclick="clearCustomData()" style="color: #ff4b4b; border-color: #3a1c1c; margin-top: 30px;">🗑️ Delete all custom places</button>
+            
+            <hr>
+            <h2>Factory Reset</h2>
+            <button class="btn-outline" onclick="resetToDefaults()" style="color: #ff4b4b; border-color: #3a1c1c;">🔄 Reset to Default Places</button>
         </div>
     </main>
 
@@ -299,17 +333,28 @@
             setupSwipe();
         }
 
+        // Now saves the ENTIRE list, not just custom ones
         function loadRestaurants() {
-            const saved = localStorage.getItem('foodPick_restaurants');
-            if (saved) {
-                allRestaurants = [...defaultRestaurants, ...JSON.parse(saved)];
+            const saved = localStorage.getItem('whatsForDinner_list');
+            if (saved && saved !== "[]") {
+                allRestaurants = JSON.parse(saved);
             } else {
                 allRestaurants = [...defaultRestaurants];
+                saveRestaurants();
             }
+        }
+
+        function saveRestaurants() {
+            localStorage.setItem('whatsForDinner_list', JSON.stringify(allRestaurants));
         }
 
         // --- CORE LOGIC ---
         function startOver() {
+            if(allRestaurants.length === 0) {
+                alert("You don't have any restaurants in your list! Go to Manage to add some.");
+                openManageView();
+                return;
+            }
             currentQueue = [...allRestaurants];
             yesses = [];
             shuffleArray(currentQueue);
@@ -337,7 +382,6 @@
         function renderCard() {
             const noCardsMsg = document.getElementById('no-cards-msg');
             
-            // Reset card positioning
             cardEl.style.transition = 'none';
             cardEl.style.transform = 'translate(0px, 0px) rotate(0deg)';
             cardEl.style.opacity = '1';
@@ -397,19 +441,16 @@
 
         // --- SWIPE EVENT HANDLERS ---
         function setupSwipe() {
-            // Touch events for mobile
             cardEl.addEventListener('touchstart', handleDragStart);
             document.addEventListener('touchmove', handleDragMove, { passive: false });
             document.addEventListener('touchend', handleDragEnd);
 
-            // Mouse events for desktop testing
             cardEl.addEventListener('mousedown', handleDragStart);
             document.addEventListener('mousemove', handleDragMove);
             document.addEventListener('mouseup', handleDragEnd);
         }
 
         function handleDragStart(e) {
-            if (e.target.tagName.toLowerCase() === 'button') return;
             isDragging = true;
             startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
             cardEl.style.transition = 'none';
@@ -417,11 +458,12 @@
 
         function handleDragMove(e) {
             if (!isDragging) return;
+            // Prevent default scrolling behavior when swiping
+            if(e.cancelable) e.preventDefault(); 
             
             const x = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
             currentX = x - startX;
             
-            // Calculate rotation based on drag distance
             const rotate = currentX * 0.05;
             cardEl.style.transform = `translate(${currentX}px, 0) rotate(${rotate}deg)`;
         }
@@ -430,21 +472,45 @@
             if (!isDragging) return;
             isDragging = false;
 
-            const threshold = window.innerWidth * 0.25; // 25% of screen width to trigger
+            const threshold = window.innerWidth * 0.25;
 
             if (currentX > threshold) {
-                animateVote(true); // Swiped Right
+                animateVote(true);
             } else if (currentX < -threshold) {
-                animateVote(false); // Swiped Left
+                animateVote(false);
             } else {
-                // Didn't swipe far enough, snap back
                 cardEl.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
                 cardEl.style.transform = 'translate(0px, 0px) rotate(0deg)';
             }
             currentX = 0;
         }
 
-        // --- SETTINGS / DATA MANAGEMENT ---
+        // --- MANAGE & SETTINGS ---
+        function openManageView() {
+            renderManageList();
+            switchView('manage-view');
+        }
+
+        function renderManageList() {
+            const listEl = document.getElementById('manage-list');
+            listEl.innerHTML = '';
+            
+            if(allRestaurants.length === 0) {
+                listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text);">Your list is empty!</li>';
+                return;
+            }
+
+            allRestaurants.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <strong>${item.name}</strong>
+                    <button class="btn-delete" onclick="deleteRestaurant(${index})">Delete</button>
+                `;
+                listEl.appendChild(li);
+            });
+        }
+
         function addRestaurant() {
             const nameInput = document.getElementById('new-name');
             const urlInput = document.getElementById('new-url');
@@ -456,30 +522,36 @@
                 return;
             }
 
-            let saved = localStorage.getItem('foodPick_restaurants');
-            let customRestaurants = saved ? JSON.parse(saved) : [];
-            customRestaurants.push({ name: name, image: url });
-            localStorage.setItem('foodPick_restaurants', JSON.stringify(customRestaurants));
+            allRestaurants.push({ name: name, image: url });
+            saveRestaurants();
 
-            loadRestaurants();
             nameInput.value = '';
             urlInput.value = '';
             
-            alert(`${name} added! Restarting to include it.`);
-            startOver();
+            renderManageList();
+            alert(`${name} added!`);
+        }
+
+        function deleteRestaurant(index) {
+            const place = allRestaurants[index];
+            if(confirm(`Are you sure you want to delete ${place.name}?`)) {
+                allRestaurants.splice(index, 1);
+                saveRestaurants();
+                renderManageList();
+            }
         }
 
         function exportData() {
-            const data = localStorage.getItem('foodPick_restaurants');
-            if (!data || data === "[]") {
-                alert("You don't have any custom restaurants saved yet.");
+            if (allRestaurants.length === 0) {
+                alert("You don't have any restaurants saved to export.");
                 return;
             }
             
+            const data = JSON.stringify(allRestaurants);
             navigator.clipboard.writeText(data).then(() => {
-                alert("Data copied to clipboard! You can paste this somewhere safe, or email it to yourself.");
+                alert("Data copied to clipboard! Paste it somewhere safe.");
             }).catch(err => {
-                alert("Your browser blocked the clipboard. Here is the raw data to copy manually:\n\n" + data);
+                alert("Your browser blocked the clipboard. Here is the raw data:\n\n" + data);
             });
         }
 
@@ -490,8 +562,8 @@
             try {
                 const parsed = JSON.parse(input);
                 if (Array.isArray(parsed)) {
-                    localStorage.setItem('foodPick_restaurants', input);
-                    loadRestaurants();
+                    allRestaurants = parsed;
+                    saveRestaurants();
                     alert("Data imported successfully!");
                     startOver();
                 } else {
@@ -502,10 +574,11 @@
             }
         }
 
-        function clearCustomData() {
-            if(confirm("Are you sure you want to delete all custom restaurants you've added?")) {
-                localStorage.removeItem('foodPick_restaurants');
-                loadRestaurants();
+        function resetToDefaults() {
+            if(confirm("Are you sure? This will wipe your current list and restore the original 4 default places.")) {
+                allRestaurants = [...defaultRestaurants];
+                saveRestaurants();
+                alert("Restored to defaults!");
                 startOver();
             }
         }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Whats for Dinner</title>
     <script src="messages.js"></script>
     <style>
@@ -24,14 +24,16 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
+        body, html {
             background-color: var(--bg);
             color: var(--text);
             display: flex;
             flex-direction: column;
-            height: 100dvh;
+            height: 100dvh; /* dvh handles keyboard popping up gracefully */
+            width: 100vw;
             overflow: hidden;
             touch-action: none;
+            position: fixed; /* Prevents iOS rubber-banding */
         }
 
         main {
@@ -77,7 +79,7 @@
             flex-direction: column;
             position: absolute;
             will-change: transform;
-            border: 1px solid var(--border);
+            border: none; /* Removed the white border */
         }
 
         #card-0 { cursor: grab; }
@@ -254,14 +256,33 @@
         .btn-cancel { background: transparent; border: 1px solid var(--border); color: white; }
 
         /* --- CHAT VIEW STYLES --- */
+        #chat-view {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg);
+            z-index: 50;
+            display: none;
+            flex-direction: column;
+        }
+        #chat-view.active { display: flex; }
+        
         .chat-header {
             display: flex; align-items: center; gap: 15px; padding: 15px;
             border-bottom: 1px solid var(--border); background: var(--card-bg);
+            padding-top: calc(15px + env(safe-area-inset-top)); /* Mobile notch support */
+        }
+        .chat-header-btn {
+            background: none; border: none; color: var(--text); font-size: 1.1rem;
+            display: flex; align-items: center; gap: 5px; cursor: pointer; font-weight: 500;
         }
         .chat-header img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
         .chat-header strong { font-size: 1.2rem; flex: 1; }
+        
         .chat-messages {
             flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px;
+        }
+        .chat-spacer {
+            flex: 1; /* This pushes all messages down to start from the bottom */
         }
         .msg-bubble {
             padding: 12px 16px; border-radius: 18px; max-width: 80%; font-size: 1rem; line-height: 1.4;
@@ -276,6 +297,7 @@
         
         .chat-input-area {
             display: flex; padding: 15px; gap: 10px; border-top: 1px solid var(--border); background: var(--card-bg);
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
         }
         .chat-input-area input {
             flex: 1; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--border);
@@ -295,10 +317,32 @@
             <div class="card-container">
                 <div class="card" id="card-2" style="z-index: 1; transform: scale(0.9) translateY(20px); opacity: 0;">
                     <img id="img-2" src="">
+                    <div class="card-overlay">
+                        <div class="card-info">
+                            <div class="title-row">
+                                <h2 id="name-2">Loading...</h2>
+                                <span class="distance" id="dist-2"></span>
+                            </div>
+                            <div class="time-tag" id="time-2"></div>
+                            <p class="desc" id="desc-2"></p>
+                        </div>
+                    </div>
                 </div>
+                
                 <div class="card" id="card-1" style="z-index: 2; transform: scale(0.95) translateY(10px); opacity: 0;">
                     <img id="img-1" src="">
+                    <div class="card-overlay">
+                        <div class="card-info">
+                            <div class="title-row">
+                                <h2 id="name-1">Loading...</h2>
+                                <span class="distance" id="dist-1"></span>
+                            </div>
+                            <div class="time-tag" id="time-1"></div>
+                            <p class="desc" id="desc-1"></p>
+                        </div>
+                    </div>
                 </div>
+                
                 <div class="card" id="card-0" style="z-index: 3;">
                     <img id="img-0" src="">
                     <div class="card-overlay">
@@ -316,6 +360,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div id="no-cards-msg" class="empty-state" style="display:none; position: absolute;">
                     <h2>No more restaurants!</h2>
                     <p style="margin-top: 10px;">Check your results or settings.</p>
@@ -345,13 +390,16 @@
             <button class="btn-outline" onclick="resetToDefaults()" style="color: #ff4b4b; border-color: #3a1c1c; margin-top: 20px;">🔄 Factory Reset</button>
         </div>
 
-        <div id="chat-view" class="view" style="padding: 0;">
+        <div id="chat-view">
             <div class="chat-header">
-                <button class="btn-sm btn-outline" onclick="closeChat()" style="margin:0; width:auto; border:none; font-size: 1.2rem;">⬅</button>
+                <button class="chat-header-btn" onclick="closeChat()">
+                    <span style="font-size: 1.5rem; line-height: 0.8;">‹</span> Back
+                </button>
                 <img id="chat-img" src="" alt="Profile">
                 <strong id="chat-name">Restaurant</strong>
             </div>
             <div class="chat-messages" id="chat-messages">
+                <div class="chat-spacer"></div>
                 </div>
             <div class="chat-input-area">
                 <input type="text" id="chat-input" placeholder="Type a message..." onkeypress="handleEnter(event)">
@@ -361,7 +409,7 @@
     </main>
 
     <nav class="bottom-nav" id="main-nav">
-        <button class="nav-item active" onclick="switchTab('swipe-view', this)">
+        <button class="nav-item active" id="nav-home" onclick="switchTab('swipe-view', this)">
             <span>🔥</span>
             Home
         </button>
@@ -453,13 +501,15 @@
             shuffleArray(currentQueue);
             renderStack();
             updateResultsList();
+            
+            // Send user straight back to the home screen
+            switchTab('swipe-view', document.getElementById('nav-home'));
         }
 
         function narrowDown() {
             if (yesses.length === 0) {
                 alert("You didn't say yes to anything! Restarting stack.");
                 startOver();
-                switchTab('swipe-view', document.querySelectorAll('.nav-item')[0]);
                 return;
             }
             if (yesses.length === 1) {
@@ -470,7 +520,7 @@
             yesses = [];
             shuffleArray(currentQueue);
             updateResultsList();
-            switchTab('swipe-view', document.querySelectorAll('.nav-item')[0]);
+            switchTab('swipe-view', document.getElementById('nav-home'));
             renderStack();
         }
 
@@ -481,12 +531,10 @@
                 el.style.display = 'flex';
                 el.style.opacity = '1';
                 document.getElementById(`img-${index}`).src = data.image;
-                if(index === 0) {
-                    document.getElementById(`name-0`).innerText = data.name;
-                    document.getElementById(`dist-0`).innerText = data.distance || '';
-                    document.getElementById(`time-0`).innerText = data.closingTime || '';
-                    document.getElementById(`desc-0`).innerText = data.description || 'No description provided.';
-                }
+                document.getElementById(`name-${index}`).innerText = data.name;
+                document.getElementById(`dist-${index}`).innerText = data.distance || '';
+                document.getElementById(`time-${index}`).innerText = data.closingTime || '';
+                document.getElementById(`desc-${index}`).innerText = data.description || 'No description provided.';
             } else {
                 el.style.display = 'none';
             }
@@ -636,13 +684,9 @@
             document.getElementById('chat-name').innerText = place.name;
             
             const msgContainer = document.getElementById('chat-messages');
-            msgContainer.innerHTML = ''; 
+            msgContainer.innerHTML = '<div class="chat-spacer"></div>'; // Reset and add spacer
             
-            // Hide main nav when in chat
-            document.getElementById('main-nav').style.display = 'none';
-            
-            // Switch to chat view (without updating nav item active states)
-            document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+            // Switch to chat view 
             document.getElementById('chat-view').classList.add('active');
 
             // Select a random conversation array from messages.js
@@ -700,11 +744,10 @@
         }
 
         function closeChat() {
-            document.getElementById('main-nav').style.display = 'flex';
-            switchTab('results-view', document.querySelectorAll('.nav-item')[1]);
+            document.getElementById('chat-view').classList.remove('active');
         }
 
-        // --- SETTINGS / MODAL LOGIC (Unchanged) ---
+        // --- SETTINGS / MODAL LOGIC ---
         function openSettingsTab(navElement) {
             renderSettingsList();
             switchTab('settings-view', navElement);

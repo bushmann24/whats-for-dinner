@@ -291,10 +291,15 @@
                 <label>Category</label>
                 <select id="m-category">
                     <option value="General">General (Default)</option>
+                    <option value="Asian">Asian</option>
                     <option value="Burgers">Burgers</option>
+                    <option value="Chicken">Chicken</option>
+                    <option value="Kebabs">Kebabs</option>
                     <option value="Mexican">Mexican</option>
-                    <option value="Sushi">Sushi / Asian</option>
                     <option value="Pizza">Pizza</option>
+                    <option value="Ramen">Ramen</option>
+                    <option value="Sandwiches">Sandwiches</option>
+                    <option value="Sushi">Sushi</option>
                 </select>
             </div>
 
@@ -566,7 +571,7 @@
                 if (typeof categoryMessages !== 'undefined') {
                     // Try to load category specific messages, fallback to General if category typo
                     let messageOptions = categoryMessages[placeCategory] || categoryMessages["General"];
-                    // Pick a random array from the available 4
+                    // Pick a random array from the available options
                     rawLines = messageOptions[Math.floor(Math.random() * messageOptions.length)];
                 }
                 
@@ -659,6 +664,7 @@
                 listEl.appendChild(li);
             });
         }
+        
         function openModal(index = -1) {
             editingIndex = index; const titleEl = document.getElementById('modal-title');
             if(index > -1) { 
@@ -681,6 +687,7 @@
             }
             document.getElementById('edit-modal').style.display = 'flex';
         }
+        
         function closeModal() { document.getElementById('edit-modal').style.display = 'none'; editingIndex = -1; }
         
         function saveRestaurant() {

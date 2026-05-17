@@ -3,7 +3,8 @@
 
 const pimpamaRestaurants = [
     { 
-        name: "Red Rooster Pimpama", 
+        name: "Red Rooster", 
+        suburb: "Pimpama",
         category: "Chicken",
         distance: "3 mins away", 
         closingTime: "Closes at 10:00 PM", 
@@ -11,7 +12,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/redrooster.jpg" 
     },
     { 
-        name: "Pizza Hut Pimpama", 
+        name: "Pizza Hut", 
+        suburb: "Pimpama",
         category: "Pizza",
         distance: "3 mins away", 
         closingTime: "Closes at 11:00 PM", 
@@ -19,7 +21,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/pizzahut.jpg" 
     },
     { 
-        name: "Kenzo Sushi Pimpama", 
+        name: "Kenzo Sushi", 
+        suburb: "Pimpama",
         category: "Sushi",
         distance: "3 mins away", 
         closingTime: "Closes at 7:00 PM", 
@@ -27,7 +30,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/kenzosushi.jpg" 
     },
     { 
-        name: "Maccas Pimpama", 
+        name: "Maccas", 
+        suburb: "Pimpama",
         category: "Burgers",
         distance: "4 mins away", 
         closingTime: "Open 24 Hours", 
@@ -35,7 +39,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/maccas.jpg" 
     },
     { 
-        name: "Subway Pimpama", 
+        name: "Subway", 
+        suburb: "Pimpama",
         category: "Sandwiches",
         distance: "4 mins away", 
         closingTime: "Closes at 9:00 PM", 
@@ -43,7 +48,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/subway.jpg" 
     },
     { 
-        name: "GYG Pimpama", 
+        name: "GYG", 
+        suburb: "Pimpama",
         category: "Mexican",
         distance: "6 mins away", 
         closingTime: "Closes at 11:00 PM", 
@@ -51,7 +57,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/gyg.jpg" 
     },
     { 
-        name: "Oporto Pimpama", 
+        name: "Oporto", 
+        suburb: "Pimpama",
         category: "Chicken",
         distance: "6 mins away", 
         closingTime: "Closes at 10:00 PM", 
@@ -60,6 +67,7 @@ const pimpamaRestaurants = [
     },
     { 
         name: "Pimpama Kebabs", 
+        suburb: "Pimpama",
         category: "Kebabs",
         distance: "7 mins away", 
         closingTime: "Closes at 8:30 PM", 
@@ -67,7 +75,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/pimpamakebabs.jpg" 
     },
     { 
-        name: "Noodle Box Pimpama", 
+        name: "Noodle Box", 
+        suburb: "Pimpama",
         category: "Asian",
         distance: "7 mins away", 
         closingTime: "Closes at 9:00 PM", 
@@ -75,7 +84,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/noodlebox.jpg" 
     },
     { 
-        name: "Danbo Ramen Pimpama", 
+        name: "Danbo Ramen", 
+        suburb: "Pimpama",
         category: "Ramen",
         distance: "8 mins away", 
         closingTime: "Closes at 10:00 PM", 
@@ -83,7 +93,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/danboramen.jpg" 
     },
     { 
-        name: "KFC Pimpama", 
+        name: "KFC", 
+        suburb: "Pimpama",
         category: "Chicken",
         distance: "10 mins away", 
         closingTime: "Closes at 10:00 PM", 
@@ -91,7 +102,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/kfc.jpg" 
     },
     { 
-        name: "Hungry Jacks Pimpama", 
+        name: "Hungry Jacks", 
+        suburb: "Pimpama",
         category: "Burgers",
         distance: "10 mins away", 
         closingTime: "Closes at 11:00 PM", 
@@ -99,7 +111,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/hungryjacks.jpg" 
     },
     { 
-        name: "Dominos Pimpama", 
+        name: "Dominos", 
+        suburb: "Pimpama",
         category: "Pizza",
         distance: "10 mins away", 
         closingTime: "Closes at 10:00 PM", 
@@ -107,7 +120,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/dominos.jpg" 
     },
     { 
-        name: "Sushi Break Pimpama", 
+        name: "Sushi Break", 
+        suburb: "Pimpama",
         category: "Sushi",
         distance: "10 mins away", 
         closingTime: "Closes at 8:00 PM", 
@@ -115,7 +129,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/sushibreak.jpg" 
     },
     { 
-        name: "Gong Fu Kitchen Coomera", 
+        name: "Gong Fu Kitchen", 
+        suburb: "Coomera",
         category: "Asian",
         distance: "9 mins away", 
         closingTime: "Closes at 8:45 PM", 
@@ -123,7 +138,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/gongfukitchen.jpg" 
     },
     { 
-        name: "Deep South Upper Coomera", 
+        name: "Deep South", 
+        suburb: "Upper Coomera",
         category: "Chicken",
         distance: "15 mins away", 
         closingTime: "Closes at 9:00 PM", 
@@ -131,7 +147,8 @@ const pimpamaRestaurants = [
         image: "https://raw.githubusercontent.com/bushmann24/whats-for-dinner/refs/heads/main/food-photos/deepsouth.jpg" 
     },
     { 
-        name: "Grill'd Upper Coomera", 
+        name: "Grill'd", 
+        suburb: "Upper Coomera",
         category: "Burgers",
         distance: "15 mins away", 
         closingTime: "Closes at 10:00 PM", 

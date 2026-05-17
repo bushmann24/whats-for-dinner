@@ -4,7 +4,7 @@
 const pimpamaRestaurants = [
     { 
         name: "Red Rooster Pimpama", 
-        category: "General",
+        category: "Chicken",
         distance: "3 mins away", 
         closingTime: "Closes at 10:00 PM", 
         description: "Roast chicken, legendary chips, and fresh rolls. A classic Aussie fast-food favorite.", 
@@ -36,7 +36,7 @@ const pimpamaRestaurants = [
     },
     { 
         name: "Subway Pimpama", 
-        category: "General",
+        category: "Sandwiches",
         distance: "4 mins away", 
         closingTime: "Closes at 9:00 PM", 
         description: "Freshly made subs, wraps, and salads loaded with whatever you are craving.", 
@@ -52,7 +52,7 @@ const pimpamaRestaurants = [
     },
     { 
         name: "Oporto Pimpama", 
-        category: "Burgers",
+        category: "Chicken",
         distance: "6 mins away", 
         closingTime: "Closes at 10:00 PM", 
         description: "Flame-grilled Portuguese chicken, legendary Bondi burgers, and irresistible chili sauce.", 
@@ -60,7 +60,7 @@ const pimpamaRestaurants = [
     },
     { 
         name: "Pimpama Kebabs", 
-        category: "General",
+        category: "Kebabs",
         distance: "7 mins away", 
         closingTime: "Closes at 8:30 PM", 
         description: "Hearty doner kebabs, massive snack packs, and fresh, savory gozleme.", 
@@ -68,7 +68,7 @@ const pimpamaRestaurants = [
     },
     { 
         name: "Noodle Box Pimpama", 
-        category: "General",
+        category: "Asian",
         distance: "7 mins away", 
         closingTime: "Closes at 9:00 PM", 
         description: "Wok-tossed noodles, spicy stir-fries, and tasty Asian street food.", 
@@ -76,7 +76,7 @@ const pimpamaRestaurants = [
     },
     { 
         name: "Danbo Ramen Pimpama", 
-        category: "General",
+        category: "Ramen",
         distance: "8 mins away", 
         closingTime: "Closes at 10:00 PM", 
         description: "Rich, authentic Fukuoka-style Tonkotsu ramen with perfectly cooked noodles.", 
@@ -84,7 +84,7 @@ const pimpamaRestaurants = [
     },
     { 
         name: "KFC Pimpama", 
-        category: "General",
+        category: "Chicken",
         distance: "10 mins away", 
         closingTime: "Closes at 10:00 PM", 
         description: "Finger lickin' good fried chicken, spicy Zinger burgers, and wicked wings.", 
@@ -116,7 +116,7 @@ const pimpamaRestaurants = [
     },
     { 
         name: "Gong Fu Kitchen Coomera", 
-        category: "General",
+        category: "Asian",
         distance: "9 mins away", 
         closingTime: "Closes at 8:45 PM", 
         description: "Delicious Chinese dumplings, handmade noodles, and authentic bold Asian flavors.", 
@@ -124,7 +124,7 @@ const pimpamaRestaurants = [
     },
     { 
         name: "Deep South Upper Coomera", 
-        category: "Burgers",
+        category: "Chicken",
         distance: "15 mins away", 
         closingTime: "Closes at 9:00 PM", 
         description: "Southern-style crispy fried chicken, epic massive burgers, and loaded fries.", 

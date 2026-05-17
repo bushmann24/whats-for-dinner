@@ -1,33 +1,90 @@
 // messages.js
-// Use {firstName} anywhere, and the app will replace it with the user's profile name!
+// Organised by Category! Use {firstName} to insert the user's profile name.
 
-const restaurantPickupLines = [
-    [
-        "Heeeyyy {firstName} 😉",
-        "I heard you were looking for a snack.", 
-        "But I'm the whole meal. 🍔"
+const categoryMessages = {
+    "Burgers": [
+        [
+            "Hey {firstName} 😉",
+            "Want to see what's in between my buns?"
+        ],
+        [
+            "You must be starving.",
+            "Let me satisfy that craving with a juicy double patty. 🍔"
+        ],
+        [
+            "I don't usually do this...",
+            "But I'm willing to get a little messy tonight. 🍟"
+        ],
+        [
+            "Are you a fry?",
+            "Because I want you on the side of my burger."
+        ]
     ],
-    [
-        "Hey baby..."
+    "Mexican": [
+        [
+            "Hola {firstName} 🌶️",
+            "Ready to spice things up tonight?"
+        ],
+        [
+            "I heard you like it hot.",
+            "I've got the perfect salsa waiting for you. 🌮"
+        ],
+        [
+            "Let's taco 'bout how cute you are. 😉"
+        ],
+        [
+            "You've guac my heart, {firstName}.",
+            "Let's make it a date! 🥑"
+        ]
     ],
-    [
-        "Hey 😏", 
-        "Want to see whats in between my buns?"
+    "Sushi": [
+        [
+            "Hey {firstName} 🍣",
+            "I'm soy into you."
+        ],
+        [
+            "Looking for a raw connection?",
+            "I've got the freshest catch in town."
+        ],
+        [
+            "You make my heart skip a beat like extra wasabi. 🥢"
+        ],
+        [
+            "Let's roll together tonight.",
+            "Sake is on me! 🍶"
+        ]
     ],
-    [
-        "Are you hungry?", 
-        "Because I'm hot, ready, and 5 minutes away 🍕"
+    "Pizza": [
+        [
+            "Are you hungry?",
+            "Because I'm hot, ready, and 5 minutes away 🍕"
+        ],
+        [
+            "I like my dates like I like my pizza...",
+            "Extra cheesy and at your door in 30 minutes. 😉"
+        ],
+        [
+            "You've stolen a pizza my heart, {firstName}. ❤️"
+        ],
+        [
+            "Any way you slice it, we are a perfect match."
+        ]
     ],
-    [
-        "You look delicious today, {firstName}.",
-        "Almost as delicious as my fries. 🍟"
-    ],
-    [
-        "Damn {firstName}...",
-        "I like my dates like I like my pizza...", 
-        "Extra cheesy and at your door in 30 minutes or less. 😉"
-    ],
-    [
-        "I don't usually send the first message, but for you I'll make an exception. 🌮"
+    "General": [
+        [
+            "Heeeyyy {firstName} 😉",
+            "I heard you were looking for a snack.", 
+            "But I'm the whole meal. 🍽️"
+        ],
+        [
+            "I don't usually send the first message, but for you I'll make an exception. 🥂"
+        ],
+        [
+            "I'm craving some company tonight.",
+            "Are you in?"
+        ],
+        [
+            "You look delicious today, {firstName}."
+        ]
     ]
-];
+};

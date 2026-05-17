@@ -7,18 +7,20 @@
     <style>
         :root {
             --primary: #ff4b4b;
-            --bg: #121212;
-            --card-bg: #1e1e1e;
+            --bg: #000000;
+            --card-bg: #111111;
             --text: #ffffff;
-            --secondary-text: #aaaaaa;
+            --secondary-text: #cccccc;
             --border: #333333;
+            --nav-bg: #0a0a0a;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -31,97 +33,54 @@
             touch-action: none;
         }
 
-        header {
-            background-color: var(--card-bg);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            z-index: 10;
-        }
-
-        header h1 {
-            font-size: 1.2rem;
-            color: var(--primary);
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        button {
-            cursor: pointer;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 15px;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .btn-nav {
-            background-color: #333;
-            color: #fff;
-            padding: 8px 12px;
-            font-size: 0.9rem;
-        }
-
-        .btn-nav:hover { background-color: #444; }
-
         /* Main Container */
         main {
             flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 20px;
             position: relative;
             min-height: 0;
+            width: 100%;
         }
 
         /* Views */
         .view {
             display: none;
             width: 100%;
-            max-width: 400px;
             height: 100%;
             flex-direction: column;
+            padding: 10px;
         }
 
         .view.active {
             display: flex;
         }
 
-        /* Swipe Card Style */
+        /* --- SWIPE VIEW STYLES --- */
+        #swipe-view {
+            padding: 5px; /* Slight padding for the card */
+        }
+
         .card-container {
             flex: 1;
             display: flex;
-            align-items: center;
-            justify-content: center;
             position: relative;
             width: 100%;
+            height: 100%;
             perspective: 1000px;
-            margin-top: auto;
-            margin-bottom: auto;
         }
 
         .card {
             background: var(--card-bg);
             width: 100%;
-            height: 65vh;
-            max-height: 550px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            height: 100%;
+            border-radius: 12px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             position: absolute;
             will-change: transform;
             cursor: grab;
-            border: 1px solid var(--border);
         }
 
         .card:active {
@@ -130,156 +89,191 @@
 
         .card img {
             width: 100%;
-            height: 75%;
+            height: 100%;
             object-fit: cover;
             pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* The dark gradient over the bottom of the photo */
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0) 100%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
         }
 
         .card-info {
-            padding: 15px;
-            text-align: center;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--card-bg);
+            margin-bottom: 20px;
         }
 
         .card-info h2 {
-            font-size: 1.5rem;
+            font-size: 2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
         }
 
-        /* Settings & Manage Lists */
-        .form-group {
-            margin-bottom: 10px;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            background: #2a2a2a;
-            color: white;
-            border: 1px solid #444;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-        }
-
-        .btn-secondary {
-            background-color: #4CAF50;
-            color: white;
-            width: 100%;
-            padding: 15px;
-            margin-top: 10px;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            color: var(--text);
-            border: 1px solid var(--border);
-            width: 100%;
-            padding: 15px;
-            margin-top: 10px;
-        }
-
-        .btn-delete {
-            background-color: #ff4b4b;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-
-        ul.styled-list {
-            list-style: none;
-            overflow-y: auto;
-            flex: 1;
-            margin: 15px 0;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--card-bg);
-        }
-
-        ul.styled-list li {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
+        .distance {
             font-size: 1.1rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .card-info p {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-top: 5px;
+            color: #eeeeee;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* Swipe Controls Overlay */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding-bottom: 10px;
+        }
+
+        .btn-circle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            font-size: 2rem;
+            background: #1a1a1a;
+            border: 1px solid #333;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: transform 0.1s;
         }
 
-        ul.styled-list li:last-child {
-            border-bottom: none;
+        .btn-circle:active {
+            transform: scale(0.9);
         }
 
-        ul.styled-list li img {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
-            object-fit: cover;
+        .btn-no { color: #ff4b4b; }
+        .btn-yes { color: #4CAF50; }
+
+        /* --- BOTTOM NAVIGATION --- */
+        .bottom-nav {
+            background-color: var(--nav-bg);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 15px 10px;
+            padding-bottom: calc(15px + env(safe-area-inset-bottom)); /* Adjusts for iPhone home bar */
+            border-top: 1px solid var(--border);
+            z-index: 10;
         }
 
-        ul.styled-list li strong {
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .empty-state {
-            text-align: center;
+        .nav-item {
+            background: none;
+            border: none;
             color: var(--secondary-text);
-            margin-top: 50px;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
         }
 
-        h2 { margin-bottom: 10px; }
-        hr { margin: 20px 0; border: 0; border-top: 1px solid var(--border); }
+        .nav-item span {
+            font-size: 1.5rem;
+            filter: grayscale(100%) opacity(0.6);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item.active span {
+            filter: grayscale(0%) opacity(1);
+        }
+
+        /* --- OTHER VIEWS (Settings, Manage, Results) --- */
+        .scrollable-content {
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+
+        h2.view-title { margin-bottom: 20px; margin-top: 10px; font-size: 1.8rem; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group input {
+            width: 100%; padding: 15px; background: #222; color: white;
+            border: 1px solid #444; border-radius: 8px; font-size: 1rem;
+        }
+
+        .btn-primary { background-color: var(--primary); color: white; width: 100%; padding: 15px; border-radius: 8px; font-size: 1.1rem; border: none; font-weight: bold;}
+        .btn-secondary { background-color: #4CAF50; color: white; width: 100%; padding: 15px; border-radius: 8px; font-size: 1.1rem; border: none; font-weight: bold; margin-bottom: 10px;}
+        .btn-outline { background-color: transparent; color: var(--text); border: 1px solid var(--border); width: 100%; padding: 15px; border-radius: 8px; font-size: 1rem; margin-bottom: 10px;}
+        .btn-delete { background-color: #ff4b4b; color: white; padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; border: none;}
+
+        ul.styled-list {
+            list-style: none; flex: 1; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); margin-bottom: 20px;
+        }
+        ul.styled-list li {
+            padding: 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px;
+        }
+        ul.styled-list li:last-child { border-bottom: none; }
+        ul.styled-list li img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
+        ul.styled-list li strong { flex: 1; font-size: 1.1rem; }
+
+        .empty-state { text-align: center; color: var(--secondary-text); margin-top: 50px; width: 100%; }
+        hr { margin: 25px 0; border: 0; border-top: 1px solid var(--border); }
     </style>
 </head>
 <body>
-
-    <header>
-        <h1>Whats for Dinner</h1>
-        <div class="nav-buttons">
-            <button class="btn-nav" onclick="startOver()">Home</button>
-            <button class="btn-nav" onclick="openManageView()">Manage</button>
-            <button class="btn-nav" onclick="switchView('settings-view')">⚙️</button>
-        </div>
-    </header>
 
     <main>
         <div id="swipe-view" class="view active">
             <div class="card-container">
                 <div class="card" id="current-card">
                     <img id="restaurant-img" src="" alt="Restaurant Image">
-                    <div class="card-info">
-                        <h2 id="restaurant-name">Loading...</h2>
+                    <div class="card-overlay">
+                        <div class="card-info">
+                            <h2><span id="restaurant-name">Loading...</span> <span class="distance">5 minutes away</span></h2>
+                            <p>random words till a description is put in place</p>
+                        </div>
+                        <div class="controls">
+                            <button class="btn-circle btn-no" onclick="animateVote(false)">✖</button>
+                            <button class="btn-circle btn-yes" onclick="animateVote(true)">❤</button>
+                        </div>
                     </div>
                 </div>
                 <div id="no-cards-msg" class="empty-state" style="display:none;">
                     <h2>No more restaurants!</h2>
-                    <p>Check your results.</p>
+                    <p style="margin-top: 10px;">Check your results or manage your list.</p>
                 </div>
             </div>
         </div>
 
-        <div id="results-view" class="view">
-            <h2>Your Matches</h2>
+        <div id="results-view" class="view scrollable-content">
+            <h2 class="view-title">Your Matches</h2>
             <ul id="yesses-list" class="styled-list"></ul>
             <button class="btn-secondary" onclick="narrowDown()">Narrow it down!</button>
-            <button class="btn-primary" onclick="startOver()" style="margin-top: 10px;">Restart from scratch</button>
+            <button class="btn-primary" onclick="startOver()">Restart Stack</button>
         </div>
 
-        <div id="manage-view" class="view" style="overflow-y: auto; padding-bottom: 20px;">
-            <h2>Add New Place</h2>
+        <div id="manage-view" class="view scrollable-content">
+            <h2 class="view-title">Add New Place</h2>
             <div class="form-group">
                 <input type="text" id="new-name" placeholder="Restaurant Name (e.g. McDonald's)">
             </div>
@@ -290,30 +284,48 @@
             
             <hr>
             
-            <h2>Your Food Stack</h2>
-            <p style="color: var(--secondary-text); font-size: 0.9rem; margin-bottom: 10px;">Here is everything currently in your rotation.</p>
-            <ul id="manage-list" class="styled-list" style="flex: none; max-height: 400px;"></ul>
+            <h2 style="margin-bottom: 15px;">Your Food Stack</h2>
+            <ul id="manage-list" class="styled-list"></ul>
         </div>
 
-        <div id="settings-view" class="view">
-            <h2>Data Management</h2>
-            <p style="margin-bottom: 15px; color: var(--secondary-text); font-size: 0.9rem;">Backup your list of places or restore an old list.</p>
+        <div id="settings-view" class="view scrollable-content">
+            <h2 class="view-title">Settings & Backup</h2>
+            <p style="margin-bottom: 15px; color: var(--secondary-text); line-height: 1.4;">Copy your custom restaurants to paste into a note, or import an old list.</p>
             <button class="btn-outline" onclick="exportData()">📋 Copy My Data</button>
             <button class="btn-outline" onclick="importData()">📥 Import Data</button>
             
             <hr>
-            <h2>Factory Reset</h2>
+            <h2 style="margin-bottom: 15px;">Danger Zone</h2>
             <button class="btn-outline" onclick="resetToDefaults()" style="color: #ff4b4b; border-color: #3a1c1c;">🔄 Reset to Default Places</button>
         </div>
     </main>
 
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('swipe-view', this)">
+            <span>🔥</span>
+            Home
+        </button>
+        <button class="nav-item" onclick="switchTab('results-view', this)">
+            <span>💖</span>
+            Matches
+        </button>
+        <button class="nav-item" onclick="openManageTab(this)">
+            <span>✏️</span>
+            Manage
+        </button>
+        <button class="nav-item" onclick="switchTab('settings-view', this)">
+            <span>⚙️</span>
+            Settings
+        </button>
+    </nav>
+
     <script>
         // --- DATA SETUP ---
         const defaultRestaurants = [
-            { name: "McDonald's", image: "https://images.unsplash.com/photo-1619985732152-7b561c71dddc?auto=format&fit=crop&w=600&q=80" },
-            { name: "Local Pizza", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80" },
-            { name: "Sushi Spot", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80" },
-            { name: "Burger King", image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=600&q=80" }
+            { name: "McDonald's", image: "https://images.unsplash.com/photo-1619985732152-7b561c71dddc?auto=format&fit=crop&w=800&q=80" },
+            { name: "Local Pizza", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80" },
+            { name: "Sushi Spot", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80" },
+            { name: "Burger King", image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=80" }
         ];
 
         let allRestaurants = [];
@@ -333,7 +345,6 @@
             setupSwipe();
         }
 
-        // Now saves the ENTIRE list, not just custom ones
         function loadRestaurants() {
             const saved = localStorage.getItem('whatsForDinner_list');
             if (saved && saved !== "[]") {
@@ -351,21 +362,22 @@
         // --- CORE LOGIC ---
         function startOver() {
             if(allRestaurants.length === 0) {
-                alert("You don't have any restaurants in your list! Go to Manage to add some.");
-                openManageView();
+                document.getElementById('current-card').style.display = 'none';
+                document.getElementById('no-cards-msg').style.display = 'block';
                 return;
             }
             currentQueue = [...allRestaurants];
             yesses = [];
             shuffleArray(currentQueue);
-            switchView('swipe-view');
             renderCard();
+            updateResultsList();
         }
 
         function narrowDown() {
             if (yesses.length === 0) {
                 alert("You didn't say yes to anything! Restarting from scratch.");
                 startOver();
+                switchTab('swipe-view', document.querySelectorAll('.nav-item')[0]);
                 return;
             }
             if (yesses.length === 1) {
@@ -375,7 +387,8 @@
             currentQueue = [...yesses];
             yesses = [];
             shuffleArray(currentQueue);
-            switchView('swipe-view');
+            updateResultsList();
+            switchTab('swipe-view', document.querySelectorAll('.nav-item')[0]);
             renderCard();
         }
 
@@ -389,7 +402,6 @@
             if (currentQueue.length === 0) {
                 cardEl.style.display = 'none';
                 noCardsMsg.style.display = 'block';
-                showResults();
                 return;
             }
 
@@ -403,12 +415,17 @@
 
         function vote(isYes) {
             const current = currentQueue.shift();
-            if (isYes) yesses.push(current);
+            if (isYes) {
+                yesses.push(current);
+                updateResultsList();
+            }
             renderCard();
         }
 
         function animateVote(isYes) {
-            const moveOutWidth = window.innerWidth;
+            if(currentQueue.length === 0) return;
+            
+            const moveOutWidth = window.innerWidth * 1.5;
             cardEl.style.transition = 'transform 0.4s ease-out, opacity 0.4s ease-out';
             cardEl.style.opacity = '0';
             
@@ -423,12 +440,12 @@
             }, 400);
         }
 
-        function showResults() {
+        function updateResultsList() {
             const listEl = document.getElementById('yesses-list');
             listEl.innerHTML = '';
 
             if (yesses.length === 0) {
-                listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text);">No matches yet!</li>';
+                listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text);">No matches yet! Keep swiping.</li>';
             } else {
                 yesses.forEach(item => {
                     const li = document.createElement('li');
@@ -436,7 +453,6 @@
                     listEl.appendChild(li);
                 });
             }
-            switchView('results-view');
         }
 
         // --- SWIPE EVENT HANDLERS ---
@@ -451,6 +467,7 @@
         }
 
         function handleDragStart(e) {
+            if (e.target.closest('button')) return; // Ignore if clicking a button
             isDragging = true;
             startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
             cardEl.style.transition = 'none';
@@ -458,7 +475,6 @@
 
         function handleDragMove(e) {
             if (!isDragging) return;
-            // Prevent default scrolling behavior when swiping
             if(e.cancelable) e.preventDefault(); 
             
             const x = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
@@ -486,9 +502,9 @@
         }
 
         // --- MANAGE & SETTINGS ---
-        function openManageView() {
+        function openManageTab(navElement) {
             renderManageList();
-            switchView('manage-view');
+            switchTab('manage-view', navElement);
         }
 
         function renderManageList() {
@@ -529,7 +545,8 @@
             urlInput.value = '';
             
             renderManageList();
-            alert(`${name} added!`);
+            alert(`${name} added to your stack!`);
+            startOver(); // Restart stack to include new item
         }
 
         function deleteRestaurant(index) {
@@ -538,6 +555,7 @@
                 allRestaurants.splice(index, 1);
                 saveRestaurants();
                 renderManageList();
+                startOver(); // Restart stack since data changed
             }
         }
 
@@ -546,19 +564,17 @@
                 alert("You don't have any restaurants saved to export.");
                 return;
             }
-            
             const data = JSON.stringify(allRestaurants);
             navigator.clipboard.writeText(data).then(() => {
-                alert("Data copied to clipboard! Paste it somewhere safe.");
+                alert("Data copied! Paste it somewhere safe.");
             }).catch(err => {
-                alert("Your browser blocked the clipboard. Here is the raw data:\n\n" + data);
+                prompt("Your browser blocked the clipboard. Copy the data below:", data);
             });
         }
 
         function importData() {
             const input = prompt("Paste your previously copied data here:");
             if (!input) return;
-            
             try {
                 const parsed = JSON.parse(input);
                 if (Array.isArray(parsed)) {
@@ -575,7 +591,7 @@
         }
 
         function resetToDefaults() {
-            if(confirm("Are you sure? This will wipe your current list and restore the original 4 default places.")) {
+            if(confirm("Are you sure? This will wipe your current list and restore the original 4 places.")) {
                 allRestaurants = [...defaultRestaurants];
                 saveRestaurants();
                 alert("Restored to defaults!");
@@ -584,9 +600,17 @@
         }
 
         // --- UTILS ---
-        function switchView(viewId) {
+        function switchTab(viewId, navElement) {
+            // Hide all views
             document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+            // Show targeted view
             document.getElementById(viewId).classList.add('active');
+            
+            // Update active state on nav buttons
+            if(navElement) {
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                navElement.classList.add('active');
+            }
         }
 
         function shuffleArray(array) {

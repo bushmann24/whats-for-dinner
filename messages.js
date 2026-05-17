@@ -70,6 +70,87 @@ const categoryMessages = {
             "Any way you slice it, we are a perfect match."
         ]
     ],
+    "Ramen": [
+        [
+            "Hey {firstName} 🍜",
+            "Sending noods..."
+        ],
+        [
+            "I'm a hopeless ramen-tic for you."
+        ],
+        [
+            "Let's spice things up.",
+            "Extra chili oil or just me? 🔥"
+        ],
+        [
+            "You make my heart melt faster than pork belly in hot broth. 😉"
+        ]
+    ],
+    "Chicken": [
+        [
+            "Hey {firstName} 🍗",
+            "Winner winner, chicken dinner!"
+        ],
+        [
+            "Are you a wing?",
+            "Because you're looking extra crispy tonight. 🔥"
+        ],
+        [
+            "Let's not wing it tonight.",
+            "I'm ready for something serious. 😉"
+        ],
+        [
+            "I'm totally clucking falling for you."
+        ]
+    ],
+    "Sandwiches": [
+        [
+            "Hey {firstName} 🥖",
+            "You're the best thing since sliced bread."
+        ],
+        [
+            "Let's meat up.",
+            "I promise it won't be cheesy. 😉"
+        ],
+        [
+            "You've got the subs, I've got the time."
+        ],
+        [
+            "I'm totally sub-mitting to your charm. 🥪"
+        ]
+    ],
+    "Asian": [
+        [
+            "Hey {firstName} 🥡",
+            "You're wok-ing my world right now."
+        ],
+        [
+            "I must be a dumpling...",
+            "Because I'm completely stuffed with feelings for you. 🥟"
+        ],
+        [
+            "Let's get takeout and make out. 😉"
+        ],
+        [
+            "Are you sweet or sour today?"
+        ]
+    ],
+    "Kebabs": [
+        [
+            "Hey {firstName} 🥙",
+            "I'd never ghost you. Only garlic sauce."
+        ],
+        [
+            "You're looking like a total snack pack tonight. 🔥"
+        ],
+        [
+            "Let's wrap this up and get out of here. 😉"
+        ],
+        [
+            "I've got a lot of meat and I know how to use it...",
+            "In a wrap. 🌯"
+        ]
+    ],
     "General": [
         [
             "Heeeyyy {firstName} 😉",

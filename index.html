@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Whats for Dinner</title>
     <script src="messages.js"></script>
+    <script src="pimpama.js"></script>
+    
     <style>
         :root {
             --primary: #ff4b4b;
@@ -44,7 +46,6 @@
         
         .card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; position: absolute; top: 0; left: 0; z-index: 1; }
         
-        /* Adjusted gradient for light/dark mode consistency on images */
         .card-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%); z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; padding-top: 60px; color: white; }
         
         .card-info { margin-bottom: 20px; }
@@ -59,7 +60,6 @@
         .btn-circle:active { transform: scale(0.9); }
         .btn-no { color: #ff4b4b; } .btn-yes { color: #4CAF50; }
         
-        /* The invisible controls class prevents the text from jumping on background cards */
         .controls.invisible { opacity: 0; pointer-events: none; }
 
         /* --- BOTTOM NAVIGATION --- */
@@ -131,7 +131,6 @@
         .msg-bubble { padding: 12px 16px; border-radius: 18px; max-width: 80%; font-size: 1rem; line-height: 1.4; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         
-        /* Adjusted chat bubbles for theme compatibility */
         .msg-left { align-self: flex-start; background: #e0e0e0; color: #333; border-bottom-left-radius: 4px; }
         :root:not(.light-mode) .msg-left { background: #2a2a2a; color: white; }
         .msg-right { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 4px; }
@@ -242,6 +241,9 @@
             <button class="btn-outline" onclick="toggleTheme()" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
                 <span id="theme-icon">🌓</span> <span id="theme-text">Toggle Light Mode</span>
             </button>
+            <button class="btn-outline" onclick="openPresetModal()" style="display: flex; align-items: center; justify-content: center; gap: 10px; border-color: var(--primary); color: var(--primary);">
+                <span>📂</span> Load Location Preset
+            </button>
             <button class="btn-primary" onclick="openModal()">+ Add New Restaurant</button>
             
             <h3 style="margin-top: 15px; margin-bottom: 10px;">Your Food Stack</h3>
@@ -286,6 +288,24 @@
             <div class="modal-actions">
                 <button class="btn-secondary btn-cancel" onclick="closeModal()">Cancel</button>
                 <button class="btn-primary" onclick="saveRestaurant()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="preset-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px;">Select a Location</h3>
+            <p style="color: var(--secondary-text); font-size: 0.9rem; margin-bottom: 15px;">Loading a preset will replace your current food stack.</p>
+            <ul class="styled-list">
+                <li onclick="applyPreset('default')">
+                    <strong>Original Defaults</strong>
+                </li>
+                <li onclick="applyPreset('pimpama')">
+                    <strong>Pimpama Local</strong>
+                </li>
+            </ul>
+            <div class="modal-actions">
+                <button class="btn-secondary btn-cancel" onclick="closePresetModal()">Cancel</button>
             </div>
         </div>
     </div>
@@ -337,6 +357,7 @@
             document.getElementById('theme-text').innerText = isLight ? "Toggle Dark Mode" : "Toggle Light Mode";
         }
 
+        // --- DATA LOGIC ---
         function loadRestaurants() {
             const saved = localStorage.getItem('whatsForDinner_list_v2');
             if (saved && saved !== "[]") { allRestaurants = JSON.parse(saved); } 
@@ -344,6 +365,31 @@
         }
 
         function saveRestaurants() { localStorage.setItem('whatsForDinner_list_v2', JSON.stringify(allRestaurants)); }
+
+        // --- PRESET LOGIC ---
+        function openPresetModal() { document.getElementById('preset-modal').style.display = 'flex'; }
+        function closePresetModal() { document.getElementById('preset-modal').style.display = 'none'; }
+        
+        function applyPreset(presetName) {
+            if(confirm("Loading this preset will replace your current food stack and matches. Continue?")) {
+                if (presetName === 'default') {
+                    allRestaurants = JSON.parse(JSON.stringify(defaultRestaurants));
+                } else if (presetName === 'pimpama') {
+                    // This relies on the pimpamaRestaurants array from pimpama.js
+                    if (typeof pimpamaRestaurants !== 'undefined') {
+                        allRestaurants = JSON.parse(JSON.stringify(pimpamaRestaurants));
+                    } else {
+                        alert("Pimpama preset file could not be found! Make sure pimpama.js is uploaded to GitHub.");
+                        return;
+                    }
+                }
+                saveRestaurants();
+                closePresetModal();
+                renderSettingsList();
+                startOver(); // Wipes matches and reloads stack
+                alert("Preset loaded successfully!");
+            }
+        }
 
         // --- PROFILE LOGIC ---
         function loadProfileData() {
@@ -365,13 +411,11 @@
         }
 
         function openProfileTab(navElement) {
-            // Update live stats before opening
             document.getElementById('stat-matches').innerText = yesses.length;
             document.getElementById('stat-places').innerText = allRestaurants.length;
             switchTab('profile-view', navElement);
         }
 
-        // Auto-Compress image so we don't crash localStorage
         function handleProfilePic(e) {
             const file = e.target.files[0];
             if(!file) return;
@@ -610,6 +654,9 @@
         
         function switchTab(viewId, navElement) {
             document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+            document.getElementById('chat-view').classList.remove('active'); 
+            activeChatName = ""; 
+            
             document.getElementById(viewId).classList.add('active');
             if(navElement) { document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); navElement.classList.add('active'); }
         }

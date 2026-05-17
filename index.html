@@ -33,7 +33,6 @@
             touch-action: none;
         }
 
-        /* Main Container */
         main {
             flex: 1;
             display: flex;
@@ -43,7 +42,6 @@
             width: 100%;
         }
 
-        /* Views */
         .view {
             display: none;
             width: 100%;
@@ -57,13 +55,13 @@
         }
 
         /* --- SWIPE VIEW STYLES --- */
-        #swipe-view {
-            padding: 5px; /* Slight padding for the card */
-        }
+        #swipe-view { padding: 5px; }
 
         .card-container {
             flex: 1;
             display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
             width: 100%;
             height: 100%;
@@ -83,9 +81,7 @@
             cursor: grab;
         }
 
-        .card:active {
-            cursor: grabbing;
-        }
+        .card:active { cursor: grabbing; }
 
         .card img {
             width: 100%;
@@ -98,24 +94,21 @@
             z-index: 1;
         }
 
-        /* The dark gradient over the bottom of the photo */
         .card-overlay {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 50%;
-            background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0) 100%);
+            background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0) 100%);
             z-index: 2;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             padding: 20px;
+            padding-top: 60px; /* soft fade upwards */
         }
 
-        .card-info {
-            margin-bottom: 20px;
-        }
+        .card-info { margin-bottom: 20px; }
 
         .card-info h2 {
             font-size: 2rem;
@@ -130,17 +123,26 @@
             font-size: 1.1rem;
             font-weight: 500;
             opacity: 0.9;
+            white-space: nowrap;
         }
 
-        .card-info p {
+        .time-tag {
+            color: #ffd700;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 4px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .card-info p.desc {
             font-size: 0.95rem;
             line-height: 1.4;
-            margin-top: 5px;
+            margin-top: 8px;
             color: #eeeeee;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
         }
 
-        /* Swipe Controls Overlay */
+        /* Swipe Controls */
         .controls {
             display: flex;
             justify-content: center;
@@ -163,10 +165,7 @@
             transition: transform 0.1s;
         }
 
-        .btn-circle:active {
-            transform: scale(0.9);
-        }
-
+        .btn-circle:active { transform: scale(0.9); }
         .btn-no { color: #ff4b4b; }
         .btn-yes { color: #4CAF50; }
 
@@ -177,7 +176,7 @@
             justify-content: space-around;
             align-items: center;
             padding: 15px 10px;
-            padding-bottom: calc(15px + env(safe-area-inset-bottom)); /* Adjusts for iPhone home bar */
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
             border-top: 1px solid var(--border);
             z-index: 10;
         }
@@ -192,6 +191,7 @@
             align-items: center;
             gap: 5px;
             cursor: pointer;
+            flex: 1;
         }
 
         .nav-item span {
@@ -199,45 +199,69 @@
             filter: grayscale(100%) opacity(0.6);
         }
 
-        .nav-item.active {
-            color: var(--primary);
-        }
+        .nav-item.active { color: var(--primary); }
+        .nav-item.active span { filter: grayscale(0%) opacity(1); }
 
-        .nav-item.active span {
-            filter: grayscale(0%) opacity(1);
-        }
-
-        /* --- OTHER VIEWS (Settings, Manage, Results) --- */
-        .scrollable-content {
-            overflow-y: auto;
-            padding-bottom: 20px;
-        }
-
+        /* --- LISTS & BUTTONS --- */
+        .scrollable-content { overflow-y: auto; padding-bottom: 20px; }
         h2.view-title { margin-bottom: 20px; margin-top: 10px; font-size: 1.8rem; }
         
-        .form-group { margin-bottom: 15px; }
-        .form-group input {
-            width: 100%; padding: 15px; background: #222; color: white;
-            border: 1px solid #444; border-radius: 8px; font-size: 1rem;
-        }
+        .btn-primary { background-color: var(--primary); color: white; width: 100%; padding: 15px; border-radius: 8px; font-size: 1.1rem; border: none; font-weight: bold; margin-bottom: 15px; cursor: pointer;}
+        .btn-secondary { background-color: #4CAF50; color: white; width: 100%; padding: 15px; border-radius: 8px; font-size: 1.1rem; border: none; font-weight: bold; margin-bottom: 10px; cursor: pointer;}
+        .btn-outline { background-color: transparent; color: var(--text); border: 1px solid var(--border); width: 100%; padding: 15px; border-radius: 8px; font-size: 1rem; margin-bottom: 10px; cursor: pointer;}
+        
+        .action-btns { display: flex; gap: 5px; }
+        .btn-sm { padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; border: none; font-weight: bold; cursor: pointer; color: white;}
+        .btn-edit { background-color: #4a90e2; }
+        .btn-delete { background-color: #ff4b4b; }
 
-        .btn-primary { background-color: var(--primary); color: white; width: 100%; padding: 15px; border-radius: 8px; font-size: 1.1rem; border: none; font-weight: bold;}
-        .btn-secondary { background-color: #4CAF50; color: white; width: 100%; padding: 15px; border-radius: 8px; font-size: 1.1rem; border: none; font-weight: bold; margin-bottom: 10px;}
-        .btn-outline { background-color: transparent; color: var(--text); border: 1px solid var(--border); width: 100%; padding: 15px; border-radius: 8px; font-size: 1rem; margin-bottom: 10px;}
-        .btn-delete { background-color: #ff4b4b; color: white; padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; border: none;}
-
-        ul.styled-list {
-            list-style: none; flex: 1; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); margin-bottom: 20px;
-        }
-        ul.styled-list li {
-            padding: 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px;
-        }
+        ul.styled-list { list-style: none; flex: 1; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); margin-bottom: 20px; }
+        ul.styled-list li { padding: 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
         ul.styled-list li:last-child { border-bottom: none; }
         ul.styled-list li img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
-        ul.styled-list li strong { flex: 1; font-size: 1.1rem; }
+        
+        .list-info { flex: 1; overflow: hidden; }
+        .list-info strong { display: block; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .list-info small { color: var(--secondary-text); font-size: 0.8rem; }
 
-        .empty-state { text-align: center; color: var(--secondary-text); margin-top: 50px; width: 100%; }
+        .empty-state { text-align: center; color: var(--secondary-text); }
         hr { margin: 25px 0; border: 0; border-top: 1px solid var(--border); }
+
+        /* --- MODAL POPUP --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 400px;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h3 { margin-bottom: 15px; font-size: 1.5rem; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--secondary-text); }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 12px; background: #222; color: white;
+            border: 1px solid #444; border-radius: 8px; font-size: 1rem;
+        }
+        .form-group textarea { resize: vertical; height: 80px; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-actions button { flex: 1; margin-bottom: 0; }
+        .btn-cancel { background: transparent; border: 1px solid var(--border); color: white; }
+
     </style>
 </head>
 <body>
@@ -249,8 +273,9 @@
                     <img id="restaurant-img" src="" alt="Restaurant Image">
                     <div class="card-overlay">
                         <div class="card-info">
-                            <h2><span id="restaurant-name">Loading...</span> <span class="distance">5 minutes away</span></h2>
-                            <p>random words till a description is put in place</p>
+                            <h2><span id="restaurant-name">Loading...</span> <span class="distance" id="restaurant-distance"></span></h2>
+                            <div class="time-tag" id="restaurant-time"></div>
+                            <p class="desc" id="restaurant-desc"></p>
                         </div>
                         <div class="controls">
                             <button class="btn-circle btn-no" onclick="animateVote(false)">✖</button>
@@ -260,7 +285,7 @@
                 </div>
                 <div id="no-cards-msg" class="empty-state" style="display:none;">
                     <h2>No more restaurants!</h2>
-                    <p style="margin-top: 10px;">Check your results or manage your list.</p>
+                    <p style="margin-top: 10px;">Check your results or settings.</p>
                 </div>
             </div>
         </div>
@@ -272,31 +297,20 @@
             <button class="btn-primary" onclick="startOver()">Restart Stack</button>
         </div>
 
-        <div id="manage-view" class="view scrollable-content">
-            <h2 class="view-title">Add New Place</h2>
-            <div class="form-group">
-                <input type="text" id="new-name" placeholder="Restaurant Name (e.g. McDonald's)">
-            </div>
-            <div class="form-group">
-                <input type="text" id="new-url" placeholder="Image URL (http://...)">
-            </div>
-            <button class="btn-primary" onclick="addRestaurant()">Add Restaurant</button>
+        <div id="settings-view" class="view scrollable-content">
+            <h2 class="view-title">Settings</h2>
+            
+            <button class="btn-primary" onclick="openModal()">+ Add New Restaurant</button>
+            
+            <h3 style="margin-top: 10px; margin-bottom: 10px;">Your Food Stack</h3>
+            <ul id="manage-list" class="styled-list"></ul>
             
             <hr>
             
-            <h2 style="margin-bottom: 15px;">Your Food Stack</h2>
-            <ul id="manage-list" class="styled-list"></ul>
-        </div>
-
-        <div id="settings-view" class="view scrollable-content">
-            <h2 class="view-title">Settings & Backup</h2>
-            <p style="margin-bottom: 15px; color: var(--secondary-text); line-height: 1.4;">Copy your custom restaurants to paste into a note, or import an old list.</p>
+            <h3 style="margin-bottom: 15px;">Backup & Restore</h3>
             <button class="btn-outline" onclick="exportData()">📋 Copy My Data</button>
             <button class="btn-outline" onclick="importData()">📥 Import Data</button>
-            
-            <hr>
-            <h2 style="margin-bottom: 15px;">Danger Zone</h2>
-            <button class="btn-outline" onclick="resetToDefaults()" style="color: #ff4b4b; border-color: #3a1c1c;">🔄 Reset to Default Places</button>
+            <button class="btn-outline" onclick="resetToDefaults()" style="color: #ff4b4b; border-color: #3a1c1c; margin-top: 20px;">🔄 Factory Reset</button>
         </div>
     </main>
 
@@ -309,28 +323,81 @@
             <span>💖</span>
             Matches
         </button>
-        <button class="nav-item" onclick="openManageTab(this)">
-            <span>✏️</span>
-            Manage
-        </button>
-        <button class="nav-item" onclick="switchTab('settings-view', this)">
+        <button class="nav-item" onclick="openSettingsTab(this)">
             <span>⚙️</span>
             Settings
         </button>
     </nav>
 
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modal-title">Add Restaurant</h3>
+            
+            <div class="form-group">
+                <label>Restaurant Name *</label>
+                <input type="text" id="m-name" placeholder="e.g. McDonald's">
+            </div>
+            <div class="form-group">
+                <label>Distance</label>
+                <input type="text" id="m-distance" placeholder="e.g. 5 minutes away">
+            </div>
+            <div class="form-group">
+                <label>Closing Time</label>
+                <input type="text" id="m-time" placeholder="e.g. Closes at 10 PM">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="m-desc" placeholder="e.g. Classic fast food burgers and fries..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Image URL *</label>
+                <input type="text" id="m-url" placeholder="http://...">
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-secondary btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-primary" onclick="saveRestaurant()">Save</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // --- DATA SETUP ---
         const defaultRestaurants = [
-            { name: "McDonald's", image: "https://images.unsplash.com/photo-1619985732152-7b561c71dddc?auto=format&fit=crop&w=800&q=80" },
-            { name: "Local Pizza", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80" },
-            { name: "Sushi Spot", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80" },
-            { name: "Burger King", image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=80" }
+            { 
+                name: "McDonald's", 
+                distance: "5 mins away", 
+                closingTime: "Open 24 Hours", 
+                description: "The classic golden arches. Burgers, fries, and shakes.", 
+                image: "https://images.unsplash.com/photo-1619985732152-7b561c71dddc?auto=format&fit=crop&w=800&q=80" 
+            },
+            { 
+                name: "Local Pizza", 
+                distance: "10 mins away", 
+                closingTime: "Closes at 11:00 PM", 
+                description: "Hot, cheesy, wood-fired pizza with your favorite toppings.", 
+                image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80" 
+            },
+            { 
+                name: "Sushi Spot", 
+                distance: "15 mins away", 
+                closingTime: "Closes at 9:30 PM", 
+                description: "Fresh rolls, sashimi, and warm miso soup for a lighter night.", 
+                image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80" 
+            },
+            { 
+                name: "Burger King", 
+                distance: "8 mins away", 
+                closingTime: "Closes at 12:00 AM", 
+                description: "Home of the Whopper. Flame-grilled beef and crispy onion rings.", 
+                image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=80" 
+            }
         ];
 
         let allRestaurants = [];
         let currentQueue = [];
         let yesses = [];
+        let editingIndex = -1; // -1 means adding new, otherwise it's the index to edit
 
         // --- SWIPE LOGIC VARIABLES ---
         const cardEl = document.getElementById('current-card');
@@ -346,20 +413,20 @@
         }
 
         function loadRestaurants() {
-            const saved = localStorage.getItem('whatsForDinner_list');
+            const saved = localStorage.getItem('whatsForDinner_list_v2');
             if (saved && saved !== "[]") {
                 allRestaurants = JSON.parse(saved);
             } else {
-                allRestaurants = [...defaultRestaurants];
+                allRestaurants = JSON.parse(JSON.stringify(defaultRestaurants)); // Deep copy defaults
                 saveRestaurants();
             }
         }
 
         function saveRestaurants() {
-            localStorage.setItem('whatsForDinner_list', JSON.stringify(allRestaurants));
+            localStorage.setItem('whatsForDinner_list_v2', JSON.stringify(allRestaurants));
         }
 
-        // --- CORE LOGIC ---
+        // --- CORE SWIPE LOGIC ---
         function startOver() {
             if(allRestaurants.length === 0) {
                 document.getElementById('current-card').style.display = 'none';
@@ -375,7 +442,7 @@
 
         function narrowDown() {
             if (yesses.length === 0) {
-                alert("You didn't say yes to anything! Restarting from scratch.");
+                alert("You didn't say yes to anything! Restarting stack.");
                 startOver();
                 switchTab('swipe-view', document.querySelectorAll('.nav-item')[0]);
                 return;
@@ -411,6 +478,9 @@
             const current = currentQueue[0];
             document.getElementById('restaurant-img').src = current.image;
             document.getElementById('restaurant-name').innerText = current.name;
+            document.getElementById('restaurant-distance').innerText = current.distance || '';
+            document.getElementById('restaurant-time').innerText = current.closingTime || '';
+            document.getElementById('restaurant-desc').innerText = current.description || 'random words till a description is put in place';
         }
 
         function vote(isYes) {
@@ -449,7 +519,13 @@
             } else {
                 yesses.forEach(item => {
                     const li = document.createElement('li');
-                    li.innerHTML = `<img src="${item.image}" alt="${item.name}"> <strong>${item.name}</strong>`;
+                    li.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}"> 
+                        <div class="list-info">
+                            <strong>${item.name}</strong>
+                            <small>${item.distance || ''}</small>
+                        </div>
+                    `;
                     listEl.appendChild(li);
                 });
             }
@@ -467,7 +543,7 @@
         }
 
         function handleDragStart(e) {
-            if (e.target.closest('button')) return; // Ignore if clicking a button
+            if (e.target.closest('button')) return;
             isDragging = true;
             startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
             cardEl.style.transition = 'none';
@@ -479,7 +555,6 @@
             
             const x = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
             currentX = x - startX;
-            
             const rotate = currentX * 0.05;
             cardEl.style.transform = `translate(${currentX}px, 0) rotate(${rotate}deg)`;
         }
@@ -487,7 +562,6 @@
         function handleDragEnd() {
             if (!isDragging) return;
             isDragging = false;
-
             const threshold = window.innerWidth * 0.25;
 
             if (currentX > threshold) {
@@ -501,18 +575,18 @@
             currentX = 0;
         }
 
-        // --- MANAGE & SETTINGS ---
-        function openManageTab(navElement) {
-            renderManageList();
-            switchTab('manage-view', navElement);
+        // --- SETTINGS / MODAL LOGIC ---
+        function openSettingsTab(navElement) {
+            renderSettingsList();
+            switchTab('settings-view', navElement);
         }
 
-        function renderManageList() {
+        function renderSettingsList() {
             const listEl = document.getElementById('manage-list');
             listEl.innerHTML = '';
             
             if(allRestaurants.length === 0) {
-                listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text);">Your list is empty!</li>';
+                listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text);">Your stack is empty!</li>';
                 return;
             }
 
@@ -520,53 +594,100 @@
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <img src="${item.image}" alt="${item.name}">
-                    <strong>${item.name}</strong>
-                    <button class="btn-delete" onclick="deleteRestaurant(${index})">Delete</button>
+                    <div class="list-info">
+                        <strong>${item.name}</strong>
+                    </div>
+                    <div class="action-btns">
+                        <button class="btn-sm btn-edit" onclick="openModal(${index})">Edit</button>
+                        <button class="btn-sm btn-delete" onclick="deleteRestaurant(${index})">Del</button>
+                    </div>
                 `;
                 listEl.appendChild(li);
             });
         }
 
-        function addRestaurant() {
-            const nameInput = document.getElementById('new-name');
-            const urlInput = document.getElementById('new-url');
-            const name = nameInput.value.trim();
-            const url = urlInput.value.trim();
+        function openModal(index = -1) {
+            editingIndex = index;
+            const titleEl = document.getElementById('modal-title');
+            
+            if(index > -1) {
+                // Edit existing
+                titleEl.innerText = "Edit Restaurant";
+                const place = allRestaurants[index];
+                document.getElementById('m-name').value = place.name || '';
+                document.getElementById('m-distance').value = place.distance || '';
+                document.getElementById('m-time').value = place.closingTime || '';
+                document.getElementById('m-desc').value = place.description || '';
+                document.getElementById('m-url').value = place.image || '';
+            } else {
+                // Add new
+                titleEl.innerText = "Add New Restaurant";
+                document.getElementById('m-name').value = '';
+                document.getElementById('m-distance').value = '';
+                document.getElementById('m-time').value = '';
+                document.getElementById('m-desc').value = '';
+                document.getElementById('m-url').value = '';
+            }
+            
+            document.getElementById('edit-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('edit-modal').style.display = 'none';
+            editingIndex = -1;
+        }
+
+        function saveRestaurant() {
+            const name = document.getElementById('m-name').value.trim();
+            const distance = document.getElementById('m-distance').value.trim();
+            const time = document.getElementById('m-time').value.trim();
+            const desc = document.getElementById('m-desc').value.trim();
+            const url = document.getElementById('m-url').value.trim();
 
             if (!name || !url) {
-                alert("Please enter both a name and an image URL.");
+                alert("Please enter at least a Name and an Image URL.");
                 return;
             }
 
-            allRestaurants.push({ name: name, image: url });
-            saveRestaurants();
+            const placeData = {
+                name: name,
+                distance: distance,
+                closingTime: time,
+                description: desc,
+                image: url
+            };
 
-            nameInput.value = '';
-            urlInput.value = '';
-            
-            renderManageList();
-            alert(`${name} added to your stack!`);
-            startOver(); // Restart stack to include new item
+            if (editingIndex > -1) {
+                allRestaurants[editingIndex] = placeData;
+            } else {
+                allRestaurants.push(placeData);
+            }
+
+            saveRestaurants();
+            closeModal();
+            renderSettingsList();
+            startOver(); // Refresh stack with new data
         }
 
         function deleteRestaurant(index) {
             const place = allRestaurants[index];
-            if(confirm(`Are you sure you want to delete ${place.name}?`)) {
+            if(confirm(`Delete ${place.name}?`)) {
                 allRestaurants.splice(index, 1);
                 saveRestaurants();
-                renderManageList();
-                startOver(); // Restart stack since data changed
+                renderSettingsList();
+                startOver();
             }
         }
 
+        // --- BACKUP & RESTORE ---
         function exportData() {
             if (allRestaurants.length === 0) {
-                alert("You don't have any restaurants saved to export.");
+                alert("You don't have any data to export.");
                 return;
             }
             const data = JSON.stringify(allRestaurants);
             navigator.clipboard.writeText(data).then(() => {
-                alert("Data copied! Paste it somewhere safe.");
+                alert("Data copied! Paste it into a note to save it.");
             }).catch(err => {
                 prompt("Your browser blocked the clipboard. Copy the data below:", data);
             });
@@ -581,6 +702,7 @@
                     allRestaurants = parsed;
                     saveRestaurants();
                     alert("Data imported successfully!");
+                    renderSettingsList();
                     startOver();
                 } else {
                     alert("Invalid data format.");
@@ -591,22 +713,20 @@
         }
 
         function resetToDefaults() {
-            if(confirm("Are you sure? This will wipe your current list and restore the original 4 places.")) {
-                allRestaurants = [...defaultRestaurants];
+            if(confirm("Are you sure? This will wipe your current list and restore the defaults.")) {
+                allRestaurants = JSON.parse(JSON.stringify(defaultRestaurants));
                 saveRestaurants();
                 alert("Restored to defaults!");
+                renderSettingsList();
                 startOver();
             }
         }
 
         // --- UTILS ---
         function switchTab(viewId, navElement) {
-            // Hide all views
             document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-            // Show targeted view
             document.getElementById(viewId).classList.add('active');
             
-            // Update active state on nav buttons
             if(navElement) {
                 document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 navElement.classList.add('active');

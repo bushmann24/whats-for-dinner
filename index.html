@@ -7,7 +7,7 @@
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ff4b4b">
-    <link rel="apple-touch-icon" href="icon.png?v=2">
+    <link rel="apple-touch-icon" href="icon.png?v=3">
 
     <script src="messages.js"></script>
     <script src="pimpama.js"></script>
@@ -86,7 +86,7 @@
         
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--secondary-text); font-weight: bold;}
-        .form-group input, .form-group textarea { width: 100%; padding: 15px; background: var(--input-bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; transition: background-color 0.3s, color 0.3s; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 15px; background: var(--input-bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; transition: background-color 0.3s, color 0.3s; }
         .form-group textarea { resize: vertical; height: 80px; }
 
         ul.styled-list { list-style: none; flex: 1; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); margin-bottom: 20px; transition: background-color 0.3s; }
@@ -286,6 +286,18 @@
         <div class="modal-content">
             <h3 id="modal-title">Add Restaurant</h3>
             <div class="form-group"><label>Restaurant Name *</label><input type="text" id="m-name" placeholder="e.g. McDonald's"></div>
+            
+            <div class="form-group">
+                <label>Category</label>
+                <select id="m-category">
+                    <option value="General">General (Default)</option>
+                    <option value="Burgers">Burgers</option>
+                    <option value="Mexican">Mexican</option>
+                    <option value="Sushi">Sushi / Asian</option>
+                    <option value="Pizza">Pizza</option>
+                </select>
+            </div>
+
             <div class="form-group"><label>Distance</label><input type="text" id="m-distance" placeholder="e.g. 5 minutes away"></div>
             <div class="form-group"><label>Closing Time</label><input type="text" id="m-time" placeholder="e.g. Closes at 10 PM"></div>
             <div class="form-group"><label>Description</label><textarea id="m-desc" placeholder="e.g. Classic fast food..."></textarea></div>
@@ -318,10 +330,10 @@
     <script>
         // --- DATA SETUP ---
         const defaultRestaurants = [
-            { name: "McDonald's", distance: "5 mins away", closingTime: "Open 24 Hours", description: "The classic golden arches. Burgers, fries, and shakes.", image: "https://images.unsplash.com/photo-1619985732152-7b561c71dddc?auto=format&fit=crop&w=800&q=80" },
-            { name: "Local Pizza", distance: "10 mins away", closingTime: "Closes at 11:00 PM", description: "Hot, cheesy, wood-fired pizza with your favorite toppings.", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80" },
-            { name: "Sushi Spot", distance: "15 mins away", closingTime: "Closes at 9:30 PM", description: "Fresh rolls, sashimi, and warm miso soup for a lighter night.", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80" },
-            { name: "Burger King", distance: "8 mins away", closingTime: "Closes at 12:00 AM", description: "Home of the Whopper. Flame-grilled beef and crispy onion rings.", image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=80" }
+            { name: "McDonald's", category: "Burgers", distance: "5 mins away", closingTime: "Open 24 Hours", description: "The classic golden arches. Burgers, fries, and shakes.", image: "https://images.unsplash.com/photo-1619985732152-7b561c71dddc?auto=format&fit=crop&w=800&q=80" },
+            { name: "Local Pizza", category: "Pizza", distance: "10 mins away", closingTime: "Closes at 11:00 PM", description: "Hot, cheesy, wood-fired pizza with your favorite toppings.", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80" },
+            { name: "Sushi Spot", category: "Sushi", distance: "15 mins away", closingTime: "Closes at 9:30 PM", description: "Fresh rolls, sashimi, and warm miso soup for a lighter night.", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80" },
+            { name: "Burger King", category: "Burgers", distance: "8 mins away", closingTime: "Closes at 12:00 AM", description: "Home of the Whopper. Flame-grilled beef and crispy onion rings.", image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=80" }
         ];
 
         let allRestaurants = [];
@@ -519,7 +531,7 @@
             currentX = 0;
         }
 
-        // --- MATCHES & PERSISTENT CHAT LOGIC ---
+        // --- MATCHES & CATEGORY-BASED CHAT LOGIC ---
         function updateResultsList() {
             const listEl = document.getElementById('yesses-list'); listEl.innerHTML = '';
             if (yesses.length === 0) { listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text); pointer-events:none;">No matches yet! Keep swiping.</li>'; } 
@@ -544,10 +556,20 @@
             
             if (!chatHistories[activeChatName]) {
                 chatHistories[activeChatName] = []; 
-                let rawLines = ["Hey there!", "Ready to eat?"]; 
-                if (typeof restaurantPickupLines !== 'undefined' && restaurantPickupLines.length > 0) {
-                    rawLines = restaurantPickupLines[Math.floor(Math.random() * restaurantPickupLines.length)];
+                
+                // Get the restaurant's category (default to General if missing)
+                let placeCategory = place.category || "General";
+                
+                let rawLines = ["Hey there!", "Ready to eat?"]; // Ultimate fallback
+                
+                // Check if our categoryMessages object exists and has the requested category
+                if (typeof categoryMessages !== 'undefined') {
+                    // Try to load category specific messages, fallback to General if category typo
+                    let messageOptions = categoryMessages[placeCategory] || categoryMessages["General"];
+                    // Pick a random array from the available 4
+                    rawLines = messageOptions[Math.floor(Math.random() * messageOptions.length)];
                 }
+                
                 let myName = document.getElementById('profile-fname').value.trim() || "Cutie";
                 let finalLines = rawLines.map(line => line.replace(/{firstName}/g, myName));
                 
@@ -633,24 +655,49 @@
             if(allRestaurants.length === 0) { listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text); pointer-events:none;">Your stack is empty!</li>'; return; }
             allRestaurants.forEach((item, index) => {
                 const li = document.createElement('li');
-                li.innerHTML = `<img src="${item.image}" alt="${item.name}"><div class="list-info"><strong>${item.name}</strong></div><div class="action-btns"><button class="btn-sm btn-edit" onclick="openModal(${index})">Edit</button><button class="btn-sm btn-delete" onclick="deleteRestaurant(${index})">Del</button></div>`;
+                li.innerHTML = `<img src="${item.image}" alt="${item.name}"><div class="list-info"><strong>${item.name}</strong><small>${item.category || 'General'}</small></div><div class="action-btns"><button class="btn-sm btn-edit" onclick="openModal(${index})">Edit</button><button class="btn-sm btn-delete" onclick="deleteRestaurant(${index})">Del</button></div>`;
                 listEl.appendChild(li);
             });
         }
         function openModal(index = -1) {
             editingIndex = index; const titleEl = document.getElementById('modal-title');
-            if(index > -1) { titleEl.innerText = "Edit Restaurant"; const place = allRestaurants[index]; document.getElementById('m-name').value = place.name || ''; document.getElementById('m-distance').value = place.distance || ''; document.getElementById('m-time').value = place.closingTime || ''; document.getElementById('m-desc').value = place.description || ''; document.getElementById('m-url').value = place.image || ''; } 
-            else { titleEl.innerText = "Add New Restaurant"; document.getElementById('m-name').value = ''; document.getElementById('m-distance').value = ''; document.getElementById('m-time').value = ''; document.getElementById('m-desc').value = ''; document.getElementById('m-url').value = ''; }
+            if(index > -1) { 
+                titleEl.innerText = "Edit Restaurant"; 
+                const place = allRestaurants[index]; 
+                document.getElementById('m-name').value = place.name || ''; 
+                document.getElementById('m-category').value = place.category || 'General';
+                document.getElementById('m-distance').value = place.distance || ''; 
+                document.getElementById('m-time').value = place.closingTime || ''; 
+                document.getElementById('m-desc').value = place.description || ''; 
+                document.getElementById('m-url').value = place.image || ''; 
+            } else { 
+                titleEl.innerText = "Add New Restaurant"; 
+                document.getElementById('m-name').value = ''; 
+                document.getElementById('m-category').value = 'General';
+                document.getElementById('m-distance').value = ''; 
+                document.getElementById('m-time').value = ''; 
+                document.getElementById('m-desc').value = ''; 
+                document.getElementById('m-url').value = ''; 
+            }
             document.getElementById('edit-modal').style.display = 'flex';
         }
         function closeModal() { document.getElementById('edit-modal').style.display = 'none'; editingIndex = -1; }
+        
         function saveRestaurant() {
-            const name = document.getElementById('m-name').value.trim(); const distance = document.getElementById('m-distance').value.trim(); const time = document.getElementById('m-time').value.trim(); const desc = document.getElementById('m-desc').value.trim(); const url = document.getElementById('m-url').value.trim();
+            const name = document.getElementById('m-name').value.trim(); 
+            const category = document.getElementById('m-category').value; 
+            const distance = document.getElementById('m-distance').value.trim(); 
+            const time = document.getElementById('m-time').value.trim(); 
+            const desc = document.getElementById('m-desc').value.trim(); 
+            const url = document.getElementById('m-url').value.trim();
+            
             if (!name || !url) { alert("Please enter at least a Name and an Image URL."); return; }
-            const placeData = { name: name, distance: distance, closingTime: time, description: desc, image: url };
+            
+            const placeData = { name: name, category: category, distance: distance, closingTime: time, description: desc, image: url };
             if (editingIndex > -1) { allRestaurants[editingIndex] = placeData; } else { allRestaurants.push(placeData); }
             saveRestaurants(); closeModal(); renderSettingsList(); startOver();
         }
+        
         function deleteRestaurant(index) { if(confirm(`Delete ${allRestaurants[index].name}?`)) { allRestaurants.splice(index, 1); saveRestaurants(); renderSettingsList(); startOver(); } }
         function exportData() { if (allRestaurants.length === 0) return alert("You don't have any data to export."); const data = JSON.stringify(allRestaurants); navigator.clipboard.writeText(data).then(() => alert("Data copied! Paste it into a note to save it.")).catch(() => prompt("Your browser blocked the clipboard. Copy the data below:", data)); }
         function importData() { const input = prompt("Paste your previously copied data here:"); if (!input) return; try { const parsed = JSON.parse(input); if (Array.isArray(parsed)) { allRestaurants = parsed; saveRestaurants(); alert("Data imported successfully!"); renderSettingsList(); startOver(); } else { alert("Invalid data format."); } } catch(e) { alert("Error importing data. Make sure you pasted exactly what was copied."); } }

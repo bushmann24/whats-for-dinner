@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Whats for Dinner</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff4b4b">
+    <link rel="apple-touch-icon" href="icon.png">
+
     <script src="messages.js"></script>
     <script src="pimpama.js"></script>
     
@@ -375,7 +380,6 @@
                 if (presetName === 'default') {
                     allRestaurants = JSON.parse(JSON.stringify(defaultRestaurants));
                 } else if (presetName === 'pimpama') {
-                    // This relies on the pimpamaRestaurants array from pimpama.js
                     if (typeof pimpamaRestaurants !== 'undefined') {
                         allRestaurants = JSON.parse(JSON.stringify(pimpamaRestaurants));
                     } else {
@@ -386,7 +390,7 @@
                 saveRestaurants();
                 closePresetModal();
                 renderSettingsList();
-                startOver(); // Wipes matches and reloads stack
+                startOver();
                 alert("Preset loaded successfully!");
             }
         }
@@ -662,7 +666,19 @@
         }
         function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } }
         
-        window.onload = initApp;
+        // Run App Initialization with Service Worker Registration
+        window.onload = () => {
+            initApp();
+            
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js').then(registration => {
+                    registration.update();
+                    console.log('Service Worker Registered Successfully');
+                }).catch(err => {
+                    console.log('Service Worker Registration Failed: ', err);
+                });
+            }
+        };
     </script>
 </body>
 </html>

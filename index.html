@@ -7,7 +7,7 @@
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ff4b4b">
-    <link rel="apple-touch-icon" href="icon.png?v=3">
+    <link rel="apple-touch-icon" href="icon.png?v=4">
 
     <script src="messages.js"></script>
     <script src="pimpama.js"></script>
@@ -57,8 +57,13 @@
         .title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .card-info h2 { font-size: 2rem; font-weight: 800; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: white; }
         .distance { font-size: 1.1rem; font-weight: 500; opacity: 0.9; white-space: nowrap; text-align: right; padding-left: 10px; color: white;}
-        .time-tag { color: #ffd700; font-size: 0.9rem; font-weight: 600; margin-top: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
-        .card-info p.desc { font-size: 0.95rem; line-height: 1.4; margin-top: 8px; color: #eeeeee; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
+        
+        /* NEW TAGS ROW */
+        .tags-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+        .suburb-tag { background: rgba(255, 255, 255, 0.25); padding: 4px 12px; border-radius: 15px; font-size: 0.85rem; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); display: none; }
+        .time-tag { color: #ffd700; font-size: 0.9rem; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
+        
+        .card-info p.desc { font-size: 0.95rem; line-height: 1.4; margin-top: 10px; color: #eeeeee; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
         
         .controls { display: flex; justify-content: center; gap: 30px; padding-bottom: 10px; }
         .btn-circle { width: 65px; height: 65px; border-radius: 50%; font-size: 2rem; background: #1a1a1a; border: 1px solid #333; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.1s; }
@@ -96,7 +101,7 @@
         ul.styled-list li img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
         .list-info { flex: 1; overflow: hidden; }
         .list-info strong { display: block; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .list-info small { color: var(--secondary-text); font-size: 0.8rem; }
+        .list-info small { color: var(--secondary-text); font-size: 0.85rem; }
         .chat-icon { font-size: 1.5rem; opacity: 0.7; }
         .empty-state { text-align: center; color: var(--secondary-text); }
         hr { margin: 25px 0; border: 0; border-top: 1px solid var(--border); }
@@ -155,7 +160,11 @@
                     <div class="card-overlay">
                         <div class="card-info">
                             <div class="title-row"><h2 id="name-2">Loading...</h2><span class="distance" id="dist-2"></span></div>
-                            <div class="time-tag" id="time-2"></div><p class="desc" id="desc-2"></p>
+                            <div class="tags-row">
+                                <span class="suburb-tag" id="suburb-2"></span>
+                                <span class="time-tag" id="time-2"></span>
+                            </div>
+                            <p class="desc" id="desc-2"></p>
                         </div>
                         <div class="controls invisible">
                             <button class="btn-circle btn-no">✖</button><button class="btn-circle btn-yes">❤</button>
@@ -168,7 +177,11 @@
                     <div class="card-overlay">
                         <div class="card-info">
                             <div class="title-row"><h2 id="name-1">Loading...</h2><span class="distance" id="dist-1"></span></div>
-                            <div class="time-tag" id="time-1"></div><p class="desc" id="desc-1"></p>
+                            <div class="tags-row">
+                                <span class="suburb-tag" id="suburb-1"></span>
+                                <span class="time-tag" id="time-1"></span>
+                            </div>
+                            <p class="desc" id="desc-1"></p>
                         </div>
                         <div class="controls invisible">
                             <button class="btn-circle btn-no">✖</button><button class="btn-circle btn-yes">❤</button>
@@ -181,7 +194,11 @@
                     <div class="card-overlay">
                         <div class="card-info">
                             <div class="title-row"><h2 id="name-0">Loading...</h2><span class="distance" id="dist-0"></span></div>
-                            <div class="time-tag" id="time-0"></div><p class="desc" id="desc-0"></p>
+                            <div class="tags-row">
+                                <span class="suburb-tag" id="suburb-0"></span>
+                                <span class="time-tag" id="time-0"></span>
+                            </div>
+                            <p class="desc" id="desc-0"></p>
                         </div>
                         <div class="controls">
                             <button class="btn-circle btn-no" onclick="animateVote(false)">✖</button>
@@ -287,6 +304,8 @@
             <h3 id="modal-title">Add Restaurant</h3>
             <div class="form-group"><label>Restaurant Name *</label><input type="text" id="m-name" placeholder="e.g. McDonald's"></div>
             
+            <div class="form-group"><label>Suburb</label><input type="text" id="m-suburb" placeholder="e.g. Pimpama"></div>
+            
             <div class="form-group">
                 <label>Category</label>
                 <select id="m-category">
@@ -335,10 +354,10 @@
     <script>
         // --- DATA SETUP ---
         const defaultRestaurants = [
-            { name: "McDonald's", category: "Burgers", distance: "5 mins away", closingTime: "Open 24 Hours", description: "The classic golden arches. Burgers, fries, and shakes.", image: "https://images.unsplash.com/photo-1619985732152-7b561c71dddc?auto=format&fit=crop&w=800&q=80" },
-            { name: "Local Pizza", category: "Pizza", distance: "10 mins away", closingTime: "Closes at 11:00 PM", description: "Hot, cheesy, wood-fired pizza with your favorite toppings.", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80" },
-            { name: "Sushi Spot", category: "Sushi", distance: "15 mins away", closingTime: "Closes at 9:30 PM", description: "Fresh rolls, sashimi, and warm miso soup for a lighter night.", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80" },
-            { name: "Burger King", category: "Burgers", distance: "8 mins away", closingTime: "Closes at 12:00 AM", description: "Home of the Whopper. Flame-grilled beef and crispy onion rings.", image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=80" }
+            { name: "McDonald's", suburb: "Local", category: "Burgers", distance: "5 mins away", closingTime: "Open 24 Hours", description: "The classic golden arches. Burgers, fries, and shakes.", image: "https://images.unsplash.com/photo-1619985732152-7b561c71dddc?auto=format&fit=crop&w=800&q=80" },
+            { name: "Local Pizza", suburb: "Local", category: "Pizza", distance: "10 mins away", closingTime: "Closes at 11:00 PM", description: "Hot, cheesy, wood-fired pizza with your favorite toppings.", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80" },
+            { name: "Sushi Spot", suburb: "Local", category: "Sushi", distance: "15 mins away", closingTime: "Closes at 9:30 PM", description: "Fresh rolls, sashimi, and warm miso soup for a lighter night.", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80" },
+            { name: "Burger King", suburb: "Local", category: "Burgers", distance: "8 mins away", closingTime: "Closes at 12:00 AM", description: "Home of the Whopper. Flame-grilled beef and crispy onion rings.", image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=80" }
         ];
 
         let allRestaurants = [];
@@ -484,11 +503,21 @@
             if (currentQueue.length > index) {
                 const data = currentQueue[index];
                 el.style.display = 'flex'; el.style.opacity = '1';
+                
                 document.getElementById(`img-${index}`).src = data.image;
                 document.getElementById(`name-${index}`).innerText = data.name;
                 document.getElementById(`dist-${index}`).innerText = data.distance || '';
                 document.getElementById(`time-${index}`).innerText = data.closingTime || '';
                 document.getElementById(`desc-${index}`).innerText = data.description || '';
+                
+                const subEl = document.getElementById(`suburb-${index}`);
+                if (data.suburb) {
+                    subEl.style.display = 'inline-block';
+                    subEl.innerText = data.suburb;
+                } else {
+                    subEl.style.display = 'none';
+                }
+                
             } else { el.style.display = 'none'; }
         }
 
@@ -543,7 +572,8 @@
             else {
                 yesses.forEach((item, index) => {
                     const li = document.createElement('li'); li.onclick = () => openChat(index);
-                    li.innerHTML = `<img src="${item.image}" alt="${item.name}"> <div class="list-info"><strong>${item.name}</strong><small>${item.distance || ''}</small></div><span class="chat-icon">💬</span>`;
+                    const subText = item.suburb ? `${item.suburb} • ` : '';
+                    li.innerHTML = `<img src="${item.image}" alt="${item.name}"> <div class="list-info"><strong>${item.name}</strong><small>${subText}${item.category || 'General'}</small></div><span class="chat-icon">💬</span>`;
                     listEl.appendChild(li);
                 });
             }
@@ -562,16 +592,11 @@
             if (!chatHistories[activeChatName]) {
                 chatHistories[activeChatName] = []; 
                 
-                // Get the restaurant's category (default to General if missing)
                 let placeCategory = place.category || "General";
+                let rawLines = ["Hey there!", "Ready to eat?"]; 
                 
-                let rawLines = ["Hey there!", "Ready to eat?"]; // Ultimate fallback
-                
-                // Check if our categoryMessages object exists and has the requested category
                 if (typeof categoryMessages !== 'undefined') {
-                    // Try to load category specific messages, fallback to General if category typo
                     let messageOptions = categoryMessages[placeCategory] || categoryMessages["General"];
-                    // Pick a random array from the available options
                     rawLines = messageOptions[Math.floor(Math.random() * messageOptions.length)];
                 }
                 
@@ -660,7 +685,8 @@
             if(allRestaurants.length === 0) { listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text); pointer-events:none;">Your stack is empty!</li>'; return; }
             allRestaurants.forEach((item, index) => {
                 const li = document.createElement('li');
-                li.innerHTML = `<img src="${item.image}" alt="${item.name}"><div class="list-info"><strong>${item.name}</strong><small>${item.category || 'General'}</small></div><div class="action-btns"><button class="btn-sm btn-edit" onclick="openModal(${index})">Edit</button><button class="btn-sm btn-delete" onclick="deleteRestaurant(${index})">Del</button></div>`;
+                const subText = item.suburb ? `${item.suburb} • ` : '';
+                li.innerHTML = `<img src="${item.image}" alt="${item.name}"><div class="list-info"><strong>${item.name}</strong><small>${subText}${item.category || 'General'}</small></div><div class="action-btns"><button class="btn-sm btn-edit" onclick="openModal(${index})">Edit</button><button class="btn-sm btn-delete" onclick="deleteRestaurant(${index})">Del</button></div>`;
                 listEl.appendChild(li);
             });
         }
@@ -671,6 +697,7 @@
                 titleEl.innerText = "Edit Restaurant"; 
                 const place = allRestaurants[index]; 
                 document.getElementById('m-name').value = place.name || ''; 
+                document.getElementById('m-suburb').value = place.suburb || ''; 
                 document.getElementById('m-category').value = place.category || 'General';
                 document.getElementById('m-distance').value = place.distance || ''; 
                 document.getElementById('m-time').value = place.closingTime || ''; 
@@ -679,6 +706,7 @@
             } else { 
                 titleEl.innerText = "Add New Restaurant"; 
                 document.getElementById('m-name').value = ''; 
+                document.getElementById('m-suburb').value = ''; 
                 document.getElementById('m-category').value = 'General';
                 document.getElementById('m-distance').value = ''; 
                 document.getElementById('m-time').value = ''; 
@@ -692,6 +720,7 @@
         
         function saveRestaurant() {
             const name = document.getElementById('m-name').value.trim(); 
+            const suburb = document.getElementById('m-suburb').value.trim(); 
             const category = document.getElementById('m-category').value; 
             const distance = document.getElementById('m-distance').value.trim(); 
             const time = document.getElementById('m-time').value.trim(); 
@@ -700,7 +729,7 @@
             
             if (!name || !url) { alert("Please enter at least a Name and an Image URL."); return; }
             
-            const placeData = { name: name, category: category, distance: distance, closingTime: time, description: desc, image: url };
+            const placeData = { name: name, suburb: suburb, category: category, distance: distance, closingTime: time, description: desc, image: url };
             if (editingIndex > -1) { allRestaurants[editingIndex] = placeData; } else { allRestaurants.push(placeData); }
             saveRestaurants(); closeModal(); renderSettingsList(); startOver();
         }

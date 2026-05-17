@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Whats for Dinner</title>
+    <script src="messages.js"></script>
     <style>
         :root {
             --primary: #ff4b4b;
@@ -50,11 +51,9 @@
             padding: 10px;
         }
 
-        .view.active {
-            display: flex;
-        }
+        .view.active { display: flex; }
 
-        /* --- SWIPE VIEW STYLES --- */
+        /* --- SWIPE VIEW & STACKING CARDS --- */
         #swipe-view { padding: 5px; }
 
         .card-container {
@@ -78,10 +77,11 @@
             flex-direction: column;
             position: absolute;
             will-change: transform;
-            cursor: grab;
+            border: 1px solid var(--border);
         }
 
-        .card:active { cursor: grabbing; }
+        #card-0 { cursor: grab; }
+        #card-0:active { cursor: grabbing; }
 
         .card img {
             width: 100%;
@@ -105,18 +105,26 @@
             flex-direction: column;
             justify-content: flex-end;
             padding: 20px;
-            padding-top: 60px; /* soft fade upwards */
+            padding-top: 60px;
         }
 
         .card-info { margin-bottom: 20px; }
 
+        .title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
         .card-info h2 {
             font-size: 2rem;
             font-weight: 800;
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .distance {
@@ -124,6 +132,8 @@
             font-weight: 500;
             opacity: 0.9;
             white-space: nowrap;
+            text-align: right;
+            padding-left: 10px;
         }
 
         .time-tag {
@@ -142,7 +152,6 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
         }
 
-        /* Swipe Controls */
         .controls {
             display: flex;
             justify-content: center;
@@ -164,7 +173,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             transition: transform 0.1s;
         }
-
         .btn-circle:active { transform: scale(0.9); }
         .btn-no { color: #ff4b4b; }
         .btn-yes { color: #4CAF50; }
@@ -193,12 +201,7 @@
             cursor: pointer;
             flex: 1;
         }
-
-        .nav-item span {
-            font-size: 1.5rem;
-            filter: grayscale(100%) opacity(0.6);
-        }
-
+        .nav-item span { font-size: 1.5rem; filter: grayscale(100%) opacity(0.6); }
         .nav-item.active { color: var(--primary); }
         .nav-item.active span { filter: grayscale(0%) opacity(1); }
 
@@ -216,40 +219,28 @@
         .btn-delete { background-color: #ff4b4b; }
 
         ul.styled-list { list-style: none; flex: 1; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); margin-bottom: 20px; }
-        ul.styled-list li { padding: 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
+        ul.styled-list li { padding: 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; cursor: pointer; transition: background 0.2s;}
+        ul.styled-list li:active { background: #222; }
         ul.styled-list li:last-child { border-bottom: none; }
         ul.styled-list li img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
         
         .list-info { flex: 1; overflow: hidden; }
         .list-info strong { display: block; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .list-info small { color: var(--secondary-text); font-size: 0.8rem; }
+        .chat-icon { font-size: 1.5rem; opacity: 0.7; }
 
         .empty-state { text-align: center; color: var(--secondary-text); }
         hr { margin: 25px 0; border: 0; border-top: 1px solid var(--border); }
 
         /* --- MODAL POPUP --- */
         .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; padding: 15px;
         }
-
         .modal-content {
-            background: var(--card-bg);
-            width: 100%;
-            max-width: 400px;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--border);
-            max-height: 90vh;
-            overflow-y: auto;
+            background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 12px;
+            padding: 20px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto;
         }
-
         .modal-content h3 { margin-bottom: 15px; font-size: 1.5rem; }
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--secondary-text); }
@@ -262,6 +253,39 @@
         .modal-actions button { flex: 1; margin-bottom: 0; }
         .btn-cancel { background: transparent; border: 1px solid var(--border); color: white; }
 
+        /* --- CHAT VIEW STYLES --- */
+        .chat-header {
+            display: flex; align-items: center; gap: 15px; padding: 15px;
+            border-bottom: 1px solid var(--border); background: var(--card-bg);
+        }
+        .chat-header img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+        .chat-header strong { font-size: 1.2rem; flex: 1; }
+        .chat-messages {
+            flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px;
+        }
+        .msg-bubble {
+            padding: 12px 16px; border-radius: 18px; max-width: 80%; font-size: 1rem; line-height: 1.4;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .msg-left { align-self: flex-start; background: #2a2a2a; color: white; border-bottom-left-radius: 4px; }
+        .msg-right { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 4px; }
+        
+        .chat-input-area {
+            display: flex; padding: 15px; gap: 10px; border-top: 1px solid var(--border); background: var(--card-bg);
+        }
+        .chat-input-area input {
+            flex: 1; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--border);
+            background: #222; color: white; font-size: 1rem;
+        }
+        .chat-input-area button {
+            background: var(--primary); color: white; border: none; padding: 0 20px;
+            border-radius: 25px; font-weight: bold; cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
@@ -269,13 +293,22 @@
     <main>
         <div id="swipe-view" class="view active">
             <div class="card-container">
-                <div class="card" id="current-card">
-                    <img id="restaurant-img" src="" alt="Restaurant Image">
+                <div class="card" id="card-2" style="z-index: 1; transform: scale(0.9) translateY(20px); opacity: 0;">
+                    <img id="img-2" src="">
+                </div>
+                <div class="card" id="card-1" style="z-index: 2; transform: scale(0.95) translateY(10px); opacity: 0;">
+                    <img id="img-1" src="">
+                </div>
+                <div class="card" id="card-0" style="z-index: 3;">
+                    <img id="img-0" src="">
                     <div class="card-overlay">
                         <div class="card-info">
-                            <h2><span id="restaurant-name">Loading...</span> <span class="distance" id="restaurant-distance"></span></h2>
-                            <div class="time-tag" id="restaurant-time"></div>
-                            <p class="desc" id="restaurant-desc"></p>
+                            <div class="title-row">
+                                <h2 id="name-0">Loading...</h2>
+                                <span class="distance" id="dist-0"></span>
+                            </div>
+                            <div class="time-tag" id="time-0"></div>
+                            <p class="desc" id="desc-0"></p>
                         </div>
                         <div class="controls">
                             <button class="btn-circle btn-no" onclick="animateVote(false)">✖</button>
@@ -283,7 +316,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="no-cards-msg" class="empty-state" style="display:none;">
+                <div id="no-cards-msg" class="empty-state" style="display:none; position: absolute;">
                     <h2>No more restaurants!</h2>
                     <p style="margin-top: 10px;">Check your results or settings.</p>
                 </div>
@@ -292,6 +325,7 @@
 
         <div id="results-view" class="view scrollable-content">
             <h2 class="view-title">Your Matches</h2>
+            <p style="color: var(--secondary-text); margin-bottom: 15px; font-size: 0.9rem;">Tap a match to message them!</p>
             <ul id="yesses-list" class="styled-list"></ul>
             <button class="btn-secondary" onclick="narrowDown()">Narrow it down!</button>
             <button class="btn-primary" onclick="startOver()">Restart Stack</button>
@@ -299,22 +333,34 @@
 
         <div id="settings-view" class="view scrollable-content">
             <h2 class="view-title">Settings</h2>
-            
             <button class="btn-primary" onclick="openModal()">+ Add New Restaurant</button>
             
             <h3 style="margin-top: 10px; margin-bottom: 10px;">Your Food Stack</h3>
             <ul id="manage-list" class="styled-list"></ul>
             
             <hr>
-            
             <h3 style="margin-bottom: 15px;">Backup & Restore</h3>
             <button class="btn-outline" onclick="exportData()">📋 Copy My Data</button>
             <button class="btn-outline" onclick="importData()">📥 Import Data</button>
             <button class="btn-outline" onclick="resetToDefaults()" style="color: #ff4b4b; border-color: #3a1c1c; margin-top: 20px;">🔄 Factory Reset</button>
         </div>
+
+        <div id="chat-view" class="view" style="padding: 0;">
+            <div class="chat-header">
+                <button class="btn-sm btn-outline" onclick="closeChat()" style="margin:0; width:auto; border:none; font-size: 1.2rem;">⬅</button>
+                <img id="chat-img" src="" alt="Profile">
+                <strong id="chat-name">Restaurant</strong>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Type a message..." onkeypress="handleEnter(event)">
+                <button onclick="sendUserMessage()">Send</button>
+            </div>
+        </div>
     </main>
 
-    <nav class="bottom-nav">
+    <nav class="bottom-nav" id="main-nav">
         <button class="nav-item active" onclick="switchTab('swipe-view', this)">
             <span>🔥</span>
             Home
@@ -332,7 +378,6 @@
     <div id="edit-modal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modal-title">Add Restaurant</h3>
-            
             <div class="form-group">
                 <label>Restaurant Name *</label>
                 <input type="text" id="m-name" placeholder="e.g. McDonald's">
@@ -353,7 +398,6 @@
                 <label>Image URL *</label>
                 <input type="text" id="m-url" placeholder="http://...">
             </div>
-            
             <div class="modal-actions">
                 <button class="btn-secondary btn-cancel" onclick="closeModal()">Cancel</button>
                 <button class="btn-primary" onclick="saveRestaurant()">Save</button>
@@ -364,43 +408,21 @@
     <script>
         // --- DATA SETUP ---
         const defaultRestaurants = [
-            { 
-                name: "McDonald's", 
-                distance: "5 mins away", 
-                closingTime: "Open 24 Hours", 
-                description: "The classic golden arches. Burgers, fries, and shakes.", 
-                image: "https://images.unsplash.com/photo-1619985732152-7b561c71dddc?auto=format&fit=crop&w=800&q=80" 
-            },
-            { 
-                name: "Local Pizza", 
-                distance: "10 mins away", 
-                closingTime: "Closes at 11:00 PM", 
-                description: "Hot, cheesy, wood-fired pizza with your favorite toppings.", 
-                image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80" 
-            },
-            { 
-                name: "Sushi Spot", 
-                distance: "15 mins away", 
-                closingTime: "Closes at 9:30 PM", 
-                description: "Fresh rolls, sashimi, and warm miso soup for a lighter night.", 
-                image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80" 
-            },
-            { 
-                name: "Burger King", 
-                distance: "8 mins away", 
-                closingTime: "Closes at 12:00 AM", 
-                description: "Home of the Whopper. Flame-grilled beef and crispy onion rings.", 
-                image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=80" 
-            }
+            { name: "McDonald's", distance: "5 mins away", closingTime: "Open 24 Hours", description: "The classic golden arches. Burgers, fries, and shakes.", image: "https://images.unsplash.com/photo-1619985732152-7b561c71dddc?auto=format&fit=crop&w=800&q=80" },
+            { name: "Local Pizza", distance: "10 mins away", closingTime: "Closes at 11:00 PM", description: "Hot, cheesy, wood-fired pizza with your favorite toppings.", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80" },
+            { name: "Sushi Spot", distance: "15 mins away", closingTime: "Closes at 9:30 PM", description: "Fresh rolls, sashimi, and warm miso soup for a lighter night.", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80" },
+            { name: "Burger King", distance: "8 mins away", closingTime: "Closes at 12:00 AM", description: "Home of the Whopper. Flame-grilled beef and crispy onion rings.", image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=80" }
         ];
 
         let allRestaurants = [];
         let currentQueue = [];
         let yesses = [];
-        let editingIndex = -1; // -1 means adding new, otherwise it's the index to edit
+        let editingIndex = -1;
 
         // --- SWIPE LOGIC VARIABLES ---
-        const cardEl = document.getElementById('current-card');
+        const card0 = document.getElementById('card-0');
+        const card1 = document.getElementById('card-1');
+        const card2 = document.getElementById('card-2');
         let isDragging = false;
         let startX = 0;
         let currentX = 0;
@@ -417,26 +439,19 @@
             if (saved && saved !== "[]") {
                 allRestaurants = JSON.parse(saved);
             } else {
-                allRestaurants = JSON.parse(JSON.stringify(defaultRestaurants)); // Deep copy defaults
+                allRestaurants = JSON.parse(JSON.stringify(defaultRestaurants));
                 saveRestaurants();
             }
         }
 
-        function saveRestaurants() {
-            localStorage.setItem('whatsForDinner_list_v2', JSON.stringify(allRestaurants));
-        }
+        function saveRestaurants() { localStorage.setItem('whatsForDinner_list_v2', JSON.stringify(allRestaurants)); }
 
-        // --- CORE SWIPE LOGIC ---
+        // --- CORE SWIPE & STACK LOGIC ---
         function startOver() {
-            if(allRestaurants.length === 0) {
-                document.getElementById('current-card').style.display = 'none';
-                document.getElementById('no-cards-msg').style.display = 'block';
-                return;
-            }
             currentQueue = [...allRestaurants];
             yesses = [];
             shuffleArray(currentQueue);
-            renderCard();
+            renderStack();
             updateResultsList();
         }
 
@@ -456,31 +471,50 @@
             shuffleArray(currentQueue);
             updateResultsList();
             switchTab('swipe-view', document.querySelectorAll('.nav-item')[0]);
-            renderCard();
+            renderStack();
         }
 
-        function renderCard() {
+        function updateCardDOM(index) {
+            const el = document.getElementById(`card-${index}`);
+            if (currentQueue.length > index) {
+                const data = currentQueue[index];
+                el.style.display = 'flex';
+                el.style.opacity = '1';
+                document.getElementById(`img-${index}`).src = data.image;
+                if(index === 0) {
+                    document.getElementById(`name-0`).innerText = data.name;
+                    document.getElementById(`dist-0`).innerText = data.distance || '';
+                    document.getElementById(`time-0`).innerText = data.closingTime || '';
+                    document.getElementById(`desc-0`).innerText = data.description || 'No description provided.';
+                }
+            } else {
+                el.style.display = 'none';
+            }
+        }
+
+        function renderStack() {
             const noCardsMsg = document.getElementById('no-cards-msg');
             
-            cardEl.style.transition = 'none';
-            cardEl.style.transform = 'translate(0px, 0px) rotate(0deg)';
-            cardEl.style.opacity = '1';
+            // Reset transforms immediately
+            card0.style.transition = 'none';
+            card0.style.transform = 'translate(0px, 0px) rotate(0deg)';
+            card1.style.transition = 'none';
+            card1.style.transform = 'scale(0.95) translateY(10px)';
+            card2.style.transition = 'none';
+            card2.style.transform = 'scale(0.9) translateY(20px)';
 
             if (currentQueue.length === 0) {
-                cardEl.style.display = 'none';
+                card0.style.display = 'none';
+                card1.style.display = 'none';
+                card2.style.display = 'none';
                 noCardsMsg.style.display = 'block';
                 return;
             }
 
-            cardEl.style.display = 'flex';
             noCardsMsg.style.display = 'none';
-
-            const current = currentQueue[0];
-            document.getElementById('restaurant-img').src = current.image;
-            document.getElementById('restaurant-name').innerText = current.name;
-            document.getElementById('restaurant-distance').innerText = current.distance || '';
-            document.getElementById('restaurant-time').innerText = current.closingTime || '';
-            document.getElementById('restaurant-desc').innerText = current.description || 'random words till a description is put in place';
+            updateCardDOM(0);
+            updateCardDOM(1);
+            updateCardDOM(2);
         }
 
         function vote(isYes) {
@@ -489,55 +523,40 @@
                 yesses.push(current);
                 updateResultsList();
             }
-            renderCard();
+            renderStack(); // Immediately pull next card forward
         }
 
         function animateVote(isYes) {
             if(currentQueue.length === 0) return;
             
             const moveOutWidth = window.innerWidth * 1.5;
-            cardEl.style.transition = 'transform 0.4s ease-out, opacity 0.4s ease-out';
-            cardEl.style.opacity = '0';
+            card0.style.transition = 'transform 0.4s ease-out';
+            card1.style.transition = 'transform 0.4s ease-out';
+            card2.style.transition = 'transform 0.4s ease-out';
             
+            // Animate top card away
             if (isYes) {
-                cardEl.style.transform = `translate(${moveOutWidth}px, 50px) rotate(30deg)`;
+                card0.style.transform = `translate(${moveOutWidth}px, 50px) rotate(30deg)`;
             } else {
-                cardEl.style.transform = `translate(-${moveOutWidth}px, 50px) rotate(-30deg)`;
+                card0.style.transform = `translate(-${moveOutWidth}px, 50px) rotate(-30deg)`;
             }
+
+            // Animate cards behind it moving up to replace it
+            card1.style.transform = 'scale(1) translateY(0px)';
+            card2.style.transform = 'scale(0.95) translateY(10px)';
 
             setTimeout(() => {
                 vote(isYes);
             }, 400);
         }
 
-        function updateResultsList() {
-            const listEl = document.getElementById('yesses-list');
-            listEl.innerHTML = '';
-
-            if (yesses.length === 0) {
-                listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text);">No matches yet! Keep swiping.</li>';
-            } else {
-                yesses.forEach(item => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        <img src="${item.image}" alt="${item.name}"> 
-                        <div class="list-info">
-                            <strong>${item.name}</strong>
-                            <small>${item.distance || ''}</small>
-                        </div>
-                    `;
-                    listEl.appendChild(li);
-                });
-            }
-        }
-
         // --- SWIPE EVENT HANDLERS ---
         function setupSwipe() {
-            cardEl.addEventListener('touchstart', handleDragStart);
+            card0.addEventListener('touchstart', handleDragStart);
             document.addEventListener('touchmove', handleDragMove, { passive: false });
             document.addEventListener('touchend', handleDragEnd);
 
-            cardEl.addEventListener('mousedown', handleDragStart);
+            card0.addEventListener('mousedown', handleDragStart);
             document.addEventListener('mousemove', handleDragMove);
             document.addEventListener('mouseup', handleDragEnd);
         }
@@ -546,7 +565,8 @@
             if (e.target.closest('button')) return;
             isDragging = true;
             startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-            cardEl.style.transition = 'none';
+            card0.style.transition = 'none';
+            card1.style.transition = 'none';
         }
 
         function handleDragMove(e) {
@@ -556,7 +576,15 @@
             const x = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
             currentX = x - startX;
             const rotate = currentX * 0.05;
-            cardEl.style.transform = `translate(${currentX}px, 0) rotate(${rotate}deg)`;
+            
+            // Move top card
+            card0.style.transform = `translate(${currentX}px, 0) rotate(${rotate}deg)`;
+            
+            // Parallax scale the card behind it
+            const progress = Math.min(Math.abs(currentX) / (window.innerWidth * 0.5), 1);
+            const scale1 = 0.95 + (0.05 * progress);
+            const y1 = 10 - (10 * progress);
+            card1.style.transform = `scale(${scale1}) translateY(${y1}px)`;
         }
 
         function handleDragEnd() {
@@ -569,13 +597,114 @@
             } else if (currentX < -threshold) {
                 animateVote(false);
             } else {
-                cardEl.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                cardEl.style.transform = 'translate(0px, 0px) rotate(0deg)';
+                // Snap back
+                card0.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                card0.style.transform = 'translate(0px, 0px) rotate(0deg)';
+                card1.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                card1.style.transform = 'scale(0.95) translateY(10px)';
             }
             currentX = 0;
         }
 
-        // --- SETTINGS / MODAL LOGIC ---
+        // --- MATCHES & CHAT LOGIC ---
+        function updateResultsList() {
+            const listEl = document.getElementById('yesses-list');
+            listEl.innerHTML = '';
+
+            if (yesses.length === 0) {
+                listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text); pointer-events:none;">No matches yet! Keep swiping.</li>';
+            } else {
+                yesses.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.onclick = () => openChat(index);
+                    li.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}"> 
+                        <div class="list-info">
+                            <strong>${item.name}</strong>
+                            <small>${item.distance || ''}</small>
+                        </div>
+                        <span class="chat-icon">💬</span>
+                    `;
+                    listEl.appendChild(li);
+                });
+            }
+        }
+
+        function openChat(index) {
+            const place = yesses[index];
+            document.getElementById('chat-img').src = place.image;
+            document.getElementById('chat-name').innerText = place.name;
+            
+            const msgContainer = document.getElementById('chat-messages');
+            msgContainer.innerHTML = ''; 
+            
+            // Hide main nav when in chat
+            document.getElementById('main-nav').style.display = 'none';
+            
+            // Switch to chat view (without updating nav item active states)
+            document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+            document.getElementById('chat-view').classList.add('active');
+
+            // Select a random conversation array from messages.js
+            let lines = ["Hey there!", "Ready to eat?"]; // Default fallback
+            if (typeof restaurantPickupLines !== 'undefined' && restaurantPickupLines.length > 0) {
+                lines = restaurantPickupLines[Math.floor(Math.random() * restaurantPickupLines.length)];
+            }
+
+            simulateTyping(lines);
+        }
+
+        function simulateTyping(lines) {
+            const msgContainer = document.getElementById('chat-messages');
+            let delay = 600;
+            
+            lines.forEach(line => {
+                setTimeout(() => {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'msg-bubble msg-left';
+                    bubble.innerText = line;
+                    msgContainer.appendChild(bubble);
+                    msgContainer.scrollTop = msgContainer.scrollHeight;
+                }, delay);
+                delay += 1500; // Wait 1.5 seconds before next message
+            });
+        }
+
+        function handleEnter(e) {
+            if(e.key === 'Enter') sendUserMessage();
+        }
+
+        function sendUserMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if(!text) return;
+            
+            const msgContainer = document.getElementById('chat-messages');
+            
+            // Add user message
+            const bubble = document.createElement('div');
+            bubble.className = 'msg-bubble msg-right';
+            bubble.innerText = text;
+            msgContainer.appendChild(bubble);
+            msgContainer.scrollTop = msgContainer.scrollHeight;
+            input.value = '';
+            
+            // Automated cheeky reply to user
+            setTimeout(() => {
+                const reply = document.createElement('div');
+                reply.className = 'msg-bubble msg-left';
+                reply.innerText = "I'm just a food app, but I like your style. 😉🍔";
+                msgContainer.appendChild(reply);
+                msgContainer.scrollTop = msgContainer.scrollHeight;
+            }, 1200);
+        }
+
+        function closeChat() {
+            document.getElementById('main-nav').style.display = 'flex';
+            switchTab('results-view', document.querySelectorAll('.nav-item')[1]);
+        }
+
+        // --- SETTINGS / MODAL LOGIC (Unchanged) ---
         function openSettingsTab(navElement) {
             renderSettingsList();
             switchTab('settings-view', navElement);
@@ -584,19 +713,15 @@
         function renderSettingsList() {
             const listEl = document.getElementById('manage-list');
             listEl.innerHTML = '';
-            
             if(allRestaurants.length === 0) {
-                listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text);">Your stack is empty!</li>';
+                listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text); pointer-events:none;">Your stack is empty!</li>';
                 return;
             }
-
             allRestaurants.forEach((item, index) => {
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <img src="${item.image}" alt="${item.name}">
-                    <div class="list-info">
-                        <strong>${item.name}</strong>
-                    </div>
+                    <div class="list-info"><strong>${item.name}</strong></div>
                     <div class="action-btns">
                         <button class="btn-sm btn-edit" onclick="openModal(${index})">Edit</button>
                         <button class="btn-sm btn-delete" onclick="deleteRestaurant(${index})">Del</button>
@@ -609,9 +734,7 @@
         function openModal(index = -1) {
             editingIndex = index;
             const titleEl = document.getElementById('modal-title');
-            
             if(index > -1) {
-                // Edit existing
                 titleEl.innerText = "Edit Restaurant";
                 const place = allRestaurants[index];
                 document.getElementById('m-name').value = place.name || '';
@@ -620,7 +743,6 @@
                 document.getElementById('m-desc').value = place.description || '';
                 document.getElementById('m-url').value = place.image || '';
             } else {
-                // Add new
                 titleEl.innerText = "Add New Restaurant";
                 document.getElementById('m-name').value = '';
                 document.getElementById('m-distance').value = '';
@@ -628,14 +750,10 @@
                 document.getElementById('m-desc').value = '';
                 document.getElementById('m-url').value = '';
             }
-            
             document.getElementById('edit-modal').style.display = 'flex';
         }
 
-        function closeModal() {
-            document.getElementById('edit-modal').style.display = 'none';
-            editingIndex = -1;
-        }
+        function closeModal() { document.getElementById('edit-modal').style.display = 'none'; editingIndex = -1; }
 
         function saveRestaurant() {
             const name = document.getElementById('m-name').value.trim();
@@ -643,54 +761,23 @@
             const time = document.getElementById('m-time').value.trim();
             const desc = document.getElementById('m-desc').value.trim();
             const url = document.getElementById('m-url').value.trim();
-
-            if (!name || !url) {
-                alert("Please enter at least a Name and an Image URL.");
-                return;
-            }
-
-            const placeData = {
-                name: name,
-                distance: distance,
-                closingTime: time,
-                description: desc,
-                image: url
-            };
-
-            if (editingIndex > -1) {
-                allRestaurants[editingIndex] = placeData;
-            } else {
-                allRestaurants.push(placeData);
-            }
-
-            saveRestaurants();
-            closeModal();
-            renderSettingsList();
-            startOver(); // Refresh stack with new data
+            if (!name || !url) { alert("Please enter at least a Name and an Image URL."); return; }
+            const placeData = { name: name, distance: distance, closingTime: time, description: desc, image: url };
+            if (editingIndex > -1) { allRestaurants[editingIndex] = placeData; } else { allRestaurants.push(placeData); }
+            saveRestaurants(); closeModal(); renderSettingsList(); startOver();
         }
 
         function deleteRestaurant(index) {
-            const place = allRestaurants[index];
-            if(confirm(`Delete ${place.name}?`)) {
-                allRestaurants.splice(index, 1);
-                saveRestaurants();
-                renderSettingsList();
-                startOver();
+            if(confirm(`Delete ${allRestaurants[index].name}?`)) {
+                allRestaurants.splice(index, 1); saveRestaurants(); renderSettingsList(); startOver();
             }
         }
 
-        // --- BACKUP & RESTORE ---
         function exportData() {
-            if (allRestaurants.length === 0) {
-                alert("You don't have any data to export.");
-                return;
-            }
+            if (allRestaurants.length === 0) return alert("You don't have any data to export.");
             const data = JSON.stringify(allRestaurants);
-            navigator.clipboard.writeText(data).then(() => {
-                alert("Data copied! Paste it into a note to save it.");
-            }).catch(err => {
-                prompt("Your browser blocked the clipboard. Copy the data below:", data);
-            });
+            navigator.clipboard.writeText(data).then(() => alert("Data copied! Paste it into a note to save it."))
+            .catch(() => prompt("Your browser blocked the clipboard. Copy the data below:", data));
         }
 
         function importData() {
@@ -698,35 +785,20 @@
             if (!input) return;
             try {
                 const parsed = JSON.parse(input);
-                if (Array.isArray(parsed)) {
-                    allRestaurants = parsed;
-                    saveRestaurants();
-                    alert("Data imported successfully!");
-                    renderSettingsList();
-                    startOver();
-                } else {
-                    alert("Invalid data format.");
-                }
-            } catch(e) {
-                alert("Error importing data. Make sure you pasted exactly what was copied.");
-            }
+                if (Array.isArray(parsed)) { allRestaurants = parsed; saveRestaurants(); alert("Data imported successfully!"); renderSettingsList(); startOver(); } 
+                else { alert("Invalid data format."); }
+            } catch(e) { alert("Error importing data. Make sure you pasted exactly what was copied."); }
         }
 
         function resetToDefaults() {
             if(confirm("Are you sure? This will wipe your current list and restore the defaults.")) {
-                allRestaurants = JSON.parse(JSON.stringify(defaultRestaurants));
-                saveRestaurants();
-                alert("Restored to defaults!");
-                renderSettingsList();
-                startOver();
+                allRestaurants = JSON.parse(JSON.stringify(defaultRestaurants)); saveRestaurants(); alert("Restored to defaults!"); renderSettingsList(); startOver();
             }
         }
 
-        // --- UTILS ---
         function switchTab(viewId, navElement) {
             document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
-            
             if(navElement) {
                 document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 navElement.classList.add('active');

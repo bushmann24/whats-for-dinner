@@ -16,298 +16,94 @@
             --nav-bg: #0a0a0a;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body, html {
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            flex-direction: column;
-            height: 100dvh; /* dvh handles keyboard popping up gracefully */
-            width: 100vw;
-            overflow: hidden;
-            touch-action: none;
-            position: fixed; /* Prevents iOS rubber-banding */
-        }
-
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            min-height: 0;
-            width: 100%;
-        }
-
-        .view {
-            display: none;
-            width: 100%;
-            height: 100%;
-            flex-direction: column;
-            padding: 10px;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body, html { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100dvh; width: 100vw; overflow: hidden; touch-action: none; position: fixed; }
+        main { flex: 1; display: flex; flex-direction: column; position: relative; min-height: 0; width: 100%; }
+        
+        .view { display: none; width: 100%; height: 100%; flex-direction: column; padding: 10px; }
         .view.active { display: flex; }
 
         /* --- SWIPE VIEW & STACKING CARDS --- */
         #swipe-view { padding: 5px; }
-
-        .card-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            width: 100%;
-            height: 100%;
-            perspective: 1000px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            width: 100%;
-            height: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            will-change: transform;
-            border: none; /* Removed the white border */
-        }
-
-        #card-0 { cursor: grab; }
-        #card-0:active { cursor: grabbing; }
-
-        .card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            pointer-events: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-
-        .card-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0) 100%);
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 20px;
-            padding-top: 60px;
-        }
-
+        .card-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; width: 100%; height: 100%; perspective: 1000px; }
+        .card { background: var(--card-bg); width: 100%; height: 100%; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; position: absolute; will-change: transform; border: none; }
+        #card-0 { cursor: grab; } #card-0:active { cursor: grabbing; }
+        .card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; position: absolute; top: 0; left: 0; z-index: 1; }
+        .card-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0) 100%); z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; padding-top: 60px; }
         .card-info { margin-bottom: 20px; }
-
-        .title-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-
-        .card-info h2 {
-            font-size: 2rem;
-            font-weight: 800;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-            margin: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .distance {
-            font-size: 1.1rem;
-            font-weight: 500;
-            opacity: 0.9;
-            white-space: nowrap;
-            text-align: right;
-            padding-left: 10px;
-        }
-
-        .time-tag {
-            color: #ffd700;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-top: 4px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-        }
-
-        .card-info p.desc {
-            font-size: 0.95rem;
-            line-height: 1.4;
-            margin-top: 8px;
-            color: #eeeeee;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            padding-bottom: 10px;
-        }
-
-        .btn-circle {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            font-size: 2rem;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            transition: transform 0.1s;
-        }
+        .title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .card-info h2 { font-size: 2rem; font-weight: 800; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .distance { font-size: 1.1rem; font-weight: 500; opacity: 0.9; white-space: nowrap; text-align: right; padding-left: 10px; }
+        .time-tag { color: #ffd700; font-size: 0.9rem; font-weight: 600; margin-top: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
+        .card-info p.desc { font-size: 0.95rem; line-height: 1.4; margin-top: 8px; color: #eeeeee; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
+        .controls { display: flex; justify-content: center; gap: 30px; padding-bottom: 10px; }
+        .btn-circle { width: 65px; height: 65px; border-radius: 50%; font-size: 2rem; background: #1a1a1a; border: 1px solid #333; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.1s; }
         .btn-circle:active { transform: scale(0.9); }
-        .btn-no { color: #ff4b4b; }
-        .btn-yes { color: #4CAF50; }
+        .btn-no { color: #ff4b4b; } .btn-yes { color: #4CAF50; }
 
         /* --- BOTTOM NAVIGATION --- */
-        .bottom-nav {
-            background-color: var(--nav-bg);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 15px 10px;
-            padding-bottom: calc(15px + env(safe-area-inset-bottom));
-            border-top: 1px solid var(--border);
-            z-index: 10;
-        }
-
-        .nav-item {
-            background: none;
-            border: none;
-            color: var(--secondary-text);
-            font-size: 0.75rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            flex: 1;
-        }
-        .nav-item span { font-size: 1.5rem; filter: grayscale(100%) opacity(0.6); }
+        .bottom-nav { background-color: var(--nav-bg); display: flex; justify-content: space-around; align-items: center; padding: 15px 10px; padding-bottom: calc(15px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); z-index: 10; }
+        .nav-item { background: none; border: none; color: var(--secondary-text); font-size: 0.70rem; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex: 1; }
+        .nav-item span { font-size: 1.4rem; filter: grayscale(100%) opacity(0.6); }
         .nav-item.active { color: var(--primary); }
         .nav-item.active span { filter: grayscale(0%) opacity(1); }
 
-        /* --- LISTS & BUTTONS --- */
+        /* --- LISTS, BUTTONS & FORMS --- */
         .scrollable-content { overflow-y: auto; padding-bottom: 20px; }
         h2.view-title { margin-bottom: 20px; margin-top: 10px; font-size: 1.8rem; }
-        
         .btn-primary { background-color: var(--primary); color: white; width: 100%; padding: 15px; border-radius: 8px; font-size: 1.1rem; border: none; font-weight: bold; margin-bottom: 15px; cursor: pointer;}
         .btn-secondary { background-color: #4CAF50; color: white; width: 100%; padding: 15px; border-radius: 8px; font-size: 1.1rem; border: none; font-weight: bold; margin-bottom: 10px; cursor: pointer;}
         .btn-outline { background-color: transparent; color: var(--text); border: 1px solid var(--border); width: 100%; padding: 15px; border-radius: 8px; font-size: 1rem; margin-bottom: 10px; cursor: pointer;}
-        
         .action-btns { display: flex; gap: 5px; }
         .btn-sm { padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; border: none; font-weight: bold; cursor: pointer; color: white;}
-        .btn-edit { background-color: #4a90e2; }
-        .btn-delete { background-color: #ff4b4b; }
+        .btn-edit { background-color: #4a90e2; } .btn-delete { background-color: #ff4b4b; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--secondary-text); }
+        .form-group input, .form-group textarea { width: 100%; padding: 15px; background: #222; color: white; border: 1px solid #444; border-radius: 8px; font-size: 1rem; }
+        .form-group textarea { resize: vertical; height: 80px; }
 
         ul.styled-list { list-style: none; flex: 1; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); margin-bottom: 20px; }
         ul.styled-list li { padding: 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; cursor: pointer; transition: background 0.2s;}
         ul.styled-list li:active { background: #222; }
         ul.styled-list li:last-child { border-bottom: none; }
         ul.styled-list li img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
-        
         .list-info { flex: 1; overflow: hidden; }
         .list-info strong { display: block; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .list-info small { color: var(--secondary-text); font-size: 0.8rem; }
         .chat-icon { font-size: 1.5rem; opacity: 0.7; }
-
         .empty-state { text-align: center; color: var(--secondary-text); }
         hr { margin: 25px 0; border: 0; border-top: 1px solid var(--border); }
 
+        /* --- PROFILE PICTURE UPLOAD --- */
+        .profile-pic-wrapper { position: relative; width: 120px; height: 120px; margin: 0 auto 20px auto; }
+        .profile-pic-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); background: #222; }
+        .profile-pic-wrapper .edit-badge { position: absolute; bottom: 0; right: 0; background: var(--primary); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 3px solid var(--bg); }
+
         /* --- MODAL POPUP --- */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; padding: 15px;
-        }
-        .modal-content {
-            background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 12px;
-            padding: 20px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto;
-        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 12px; padding: 20px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
         .modal-content h3 { margin-bottom: 15px; font-size: 1.5rem; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--secondary-text); }
-        .form-group input, .form-group textarea {
-            width: 100%; padding: 12px; background: #222; color: white;
-            border: 1px solid #444; border-radius: 8px; font-size: 1rem;
-        }
-        .form-group textarea { resize: vertical; height: 80px; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
         .modal-actions button { flex: 1; margin-bottom: 0; }
         .btn-cancel { background: transparent; border: 1px solid var(--border); color: white; }
 
         /* --- CHAT VIEW STYLES --- */
-        #chat-view {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg);
-            z-index: 50;
-            display: none;
-            flex-direction: column;
-        }
+        #chat-view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 50; display: none; flex-direction: column; }
         #chat-view.active { display: flex; }
-        
-        .chat-header {
-            display: flex; align-items: center; gap: 15px; padding: 15px;
-            border-bottom: 1px solid var(--border); background: var(--card-bg);
-            padding-top: calc(15px + env(safe-area-inset-top)); /* Mobile notch support */
-        }
-        .chat-header-btn {
-            background: none; border: none; color: var(--text); font-size: 1.1rem;
-            display: flex; align-items: center; gap: 5px; cursor: pointer; font-weight: 500;
-        }
+        .chat-header { display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid var(--border); background: var(--card-bg); padding-top: calc(15px + env(safe-area-inset-top)); }
+        .chat-header-btn { background: none; border: none; color: var(--text); font-size: 1.1rem; display: flex; align-items: center; gap: 5px; cursor: pointer; font-weight: 500; }
         .chat-header img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
         .chat-header strong { font-size: 1.2rem; flex: 1; }
-        
-        .chat-messages {
-            flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px;
-        }
-        .chat-spacer {
-            flex: 1; /* This pushes all messages down to start from the bottom */
-        }
-        .msg-bubble {
-            padding: 12px 16px; border-radius: 18px; max-width: 80%; font-size: 1rem; line-height: 1.4;
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .chat-spacer { flex: 1; }
+        .msg-bubble { padding: 12px 16px; border-radius: 18px; max-width: 80%; font-size: 1rem; line-height: 1.4; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .msg-left { align-self: flex-start; background: #2a2a2a; color: white; border-bottom-left-radius: 4px; }
         .msg-right { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 4px; }
-        
-        .chat-input-area {
-            display: flex; padding: 15px; gap: 10px; border-top: 1px solid var(--border); background: var(--card-bg);
-            padding-bottom: calc(15px + env(safe-area-inset-bottom));
-        }
-        .chat-input-area input {
-            flex: 1; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--border);
-            background: #222; color: white; font-size: 1rem;
-        }
-        .chat-input-area button {
-            background: var(--primary); color: white; border: none; padding: 0 20px;
-            border-radius: 25px; font-weight: bold; cursor: pointer;
-        }
-
+        .chat-input-area { display: flex; padding: 15px; gap: 10px; border-top: 1px solid var(--border); background: var(--card-bg); padding-bottom: calc(15px + env(safe-area-inset-bottom)); }
+        .chat-input-area input { flex: 1; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--border); background: #222; color: white; font-size: 1rem; }
+        .chat-input-area button { background: var(--primary); color: white; border: none; padding: 0 20px; border-radius: 25px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -315,44 +111,14 @@
     <main>
         <div id="swipe-view" class="view active">
             <div class="card-container">
-                <div class="card" id="card-2" style="z-index: 1; transform: scale(0.9) translateY(20px); opacity: 0;">
-                    <img id="img-2" src="">
-                    <div class="card-overlay">
-                        <div class="card-info">
-                            <div class="title-row">
-                                <h2 id="name-2">Loading...</h2>
-                                <span class="distance" id="dist-2"></span>
-                            </div>
-                            <div class="time-tag" id="time-2"></div>
-                            <p class="desc" id="desc-2"></p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card" id="card-1" style="z-index: 2; transform: scale(0.95) translateY(10px); opacity: 0;">
-                    <img id="img-1" src="">
-                    <div class="card-overlay">
-                        <div class="card-info">
-                            <div class="title-row">
-                                <h2 id="name-1">Loading...</h2>
-                                <span class="distance" id="dist-1"></span>
-                            </div>
-                            <div class="time-tag" id="time-1"></div>
-                            <p class="desc" id="desc-1"></p>
-                        </div>
-                    </div>
-                </div>
-                
+                <div class="card" id="card-2" style="z-index: 1; transform: scale(0.9) translateY(20px); opacity: 0;"><img id="img-2" src=""><div class="card-overlay"><div class="card-info"><div class="title-row"><h2 id="name-2">Loading...</h2><span class="distance" id="dist-2"></span></div><div class="time-tag" id="time-2"></div><p class="desc" id="desc-2"></p></div></div></div>
+                <div class="card" id="card-1" style="z-index: 2; transform: scale(0.95) translateY(10px); opacity: 0;"><img id="img-1" src=""><div class="card-overlay"><div class="card-info"><div class="title-row"><h2 id="name-1">Loading...</h2><span class="distance" id="dist-1"></span></div><div class="time-tag" id="time-1"></div><p class="desc" id="desc-1"></p></div></div></div>
                 <div class="card" id="card-0" style="z-index: 3;">
                     <img id="img-0" src="">
                     <div class="card-overlay">
                         <div class="card-info">
-                            <div class="title-row">
-                                <h2 id="name-0">Loading...</h2>
-                                <span class="distance" id="dist-0"></span>
-                            </div>
-                            <div class="time-tag" id="time-0"></div>
-                            <p class="desc" id="desc-0"></p>
+                            <div class="title-row"><h2 id="name-0">Loading...</h2><span class="distance" id="dist-0"></span></div>
+                            <div class="time-tag" id="time-0"></div><p class="desc" id="desc-0"></p>
                         </div>
                         <div class="controls">
                             <button class="btn-circle btn-no" onclick="animateVote(false)">✖</button>
@@ -360,10 +126,8 @@
                         </div>
                     </div>
                 </div>
-                
                 <div id="no-cards-msg" class="empty-state" style="display:none; position: absolute;">
-                    <h2>No more restaurants!</h2>
-                    <p style="margin-top: 10px;">Check your results or settings.</p>
+                    <h2>No more restaurants!</h2><p style="margin-top: 10px;">Check your results or settings.</p>
                 </div>
             </div>
         </div>
@@ -376,13 +140,31 @@
             <button class="btn-primary" onclick="startOver()">Restart Stack</button>
         </div>
 
+        <div id="profile-view" class="view scrollable-content">
+            <h2 class="view-title">My Profile</h2>
+            
+            <div class="profile-pic-wrapper" onclick="document.getElementById('profile-upload').click()">
+                <img id="profile-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" alt="Profile Picture">
+                <div class="edit-badge">📷</div>
+            </div>
+            <input type="file" id="profile-upload" accept="image/*" style="display: none;" onchange="handleProfilePic(event)">
+            <p style="text-align: center; color: var(--secondary-text); margin-bottom: 25px; font-size: 0.9rem;">Tap to upload or take a photo</p>
+            
+            <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="profile-fname" placeholder="Your Name" oninput="saveProfileData()">
+            </div>
+            <div class="form-group">
+                <label>Food Bio (Optional)</label>
+                <textarea id="profile-bio" placeholder="What are you craving?" oninput="saveProfileData()"></textarea>
+            </div>
+        </div>
+
         <div id="settings-view" class="view scrollable-content">
             <h2 class="view-title">Settings</h2>
             <button class="btn-primary" onclick="openModal()">+ Add New Restaurant</button>
-            
             <h3 style="margin-top: 10px; margin-bottom: 10px;">Your Food Stack</h3>
             <ul id="manage-list" class="styled-list"></ul>
-            
             <hr>
             <h3 style="margin-bottom: 15px;">Backup & Restore</h3>
             <button class="btn-outline" onclick="exportData()">📋 Copy My Data</button>
@@ -392,15 +174,11 @@
 
         <div id="chat-view">
             <div class="chat-header">
-                <button class="chat-header-btn" onclick="closeChat()">
-                    <span style="font-size: 1.5rem; line-height: 0.8;">‹</span> Back
-                </button>
+                <button class="chat-header-btn" onclick="closeChat()"><span style="font-size: 1.5rem; line-height: 0.8;">‹</span> Back</button>
                 <img id="chat-img" src="" alt="Profile">
                 <strong id="chat-name">Restaurant</strong>
             </div>
-            <div class="chat-messages" id="chat-messages">
-                <div class="chat-spacer"></div>
-                </div>
+            <div class="chat-messages" id="chat-messages"></div>
             <div class="chat-input-area">
                 <input type="text" id="chat-input" placeholder="Type a message..." onkeypress="handleEnter(event)">
                 <button onclick="sendUserMessage()">Send</button>
@@ -409,43 +187,20 @@
     </main>
 
     <nav class="bottom-nav" id="main-nav">
-        <button class="nav-item active" id="nav-home" onclick="switchTab('swipe-view', this)">
-            <span>🔥</span>
-            Home
-        </button>
-        <button class="nav-item" onclick="switchTab('results-view', this)">
-            <span>💖</span>
-            Matches
-        </button>
-        <button class="nav-item" onclick="openSettingsTab(this)">
-            <span>⚙️</span>
-            Settings
-        </button>
+        <button class="nav-item active" id="nav-home" onclick="switchTab('swipe-view', this)"><span>🔥</span>Home</button>
+        <button class="nav-item" onclick="switchTab('results-view', this)"><span>💖</span>Matches</button>
+        <button class="nav-item" onclick="switchTab('profile-view', this)"><span>👤</span>Profile</button>
+        <button class="nav-item" onclick="openSettingsTab(this)"><span>⚙️</span>Settings</button>
     </nav>
 
     <div id="edit-modal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modal-title">Add Restaurant</h3>
-            <div class="form-group">
-                <label>Restaurant Name *</label>
-                <input type="text" id="m-name" placeholder="e.g. McDonald's">
-            </div>
-            <div class="form-group">
-                <label>Distance</label>
-                <input type="text" id="m-distance" placeholder="e.g. 5 minutes away">
-            </div>
-            <div class="form-group">
-                <label>Closing Time</label>
-                <input type="text" id="m-time" placeholder="e.g. Closes at 10 PM">
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="m-desc" placeholder="e.g. Classic fast food burgers and fries..."></textarea>
-            </div>
-            <div class="form-group">
-                <label>Image URL *</label>
-                <input type="text" id="m-url" placeholder="http://...">
-            </div>
+            <div class="form-group"><label>Restaurant Name *</label><input type="text" id="m-name" placeholder="e.g. McDonald's"></div>
+            <div class="form-group"><label>Distance</label><input type="text" id="m-distance" placeholder="e.g. 5 minutes away"></div>
+            <div class="form-group"><label>Closing Time</label><input type="text" id="m-time" placeholder="e.g. Closes at 10 PM"></div>
+            <div class="form-group"><label>Description</label><textarea id="m-desc" placeholder="e.g. Classic fast food..."></textarea></div>
+            <div class="form-group"><label>Image URL *</label><input type="text" id="m-url" placeholder="http://..."></div>
             <div class="modal-actions">
                 <button class="btn-secondary btn-cancel" onclick="closeModal()">Cancel</button>
                 <button class="btn-primary" onclick="saveRestaurant()">Save</button>
@@ -465,243 +220,220 @@
         let allRestaurants = [];
         let currentQueue = [];
         let yesses = [];
+        let chatHistories = {};
+        let activeChatName = "";
         let editingIndex = -1;
 
         // --- SWIPE LOGIC VARIABLES ---
         const card0 = document.getElementById('card-0');
         const card1 = document.getElementById('card-1');
         const card2 = document.getElementById('card-2');
-        let isDragging = false;
-        let startX = 0;
-        let currentX = 0;
+        let isDragging = false; let startX = 0; let currentX = 0;
 
         // --- INITIALIZATION ---
         function initApp() {
             loadRestaurants();
+            loadProfileData();
+            loadChats();
             startOver();
             setupSwipe();
         }
 
         function loadRestaurants() {
             const saved = localStorage.getItem('whatsForDinner_list_v2');
-            if (saved && saved !== "[]") {
-                allRestaurants = JSON.parse(saved);
-            } else {
-                allRestaurants = JSON.parse(JSON.stringify(defaultRestaurants));
-                saveRestaurants();
-            }
+            if (saved && saved !== "[]") { allRestaurants = JSON.parse(saved); } 
+            else { allRestaurants = JSON.parse(JSON.stringify(defaultRestaurants)); saveRestaurants(); }
         }
 
         function saveRestaurants() { localStorage.setItem('whatsForDinner_list_v2', JSON.stringify(allRestaurants)); }
+
+        // --- PROFILE LOGIC ---
+        function loadProfileData() {
+            const savedProfile = JSON.parse(localStorage.getItem('whatsForDinner_profile')) || {};
+            if(savedProfile.name) document.getElementById('profile-fname').value = savedProfile.name;
+            if(savedProfile.bio) document.getElementById('profile-bio').value = savedProfile.bio;
+            if(savedProfile.pic) document.getElementById('profile-preview').src = savedProfile.pic;
+        }
+
+        function saveProfileData() {
+            const data = {
+                name: document.getElementById('profile-fname').value,
+                bio: document.getElementById('profile-bio').value,
+                pic: document.getElementById('profile-preview').src
+            };
+            localStorage.setItem('whatsForDinner_profile', JSON.stringify(data));
+        }
+
+        // Auto-Compress image so we don't crash localStorage
+        function handleProfilePic(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 300; // Small size for fast saving
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    document.getElementById('profile-preview').src = canvas.toDataURL('image/jpeg', 0.8);
+                    saveProfileData();
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
 
         // --- CORE SWIPE & STACK LOGIC ---
         function startOver() {
             currentQueue = [...allRestaurants];
             yesses = [];
+            
+            // WIPE CHATS ON RESTART
+            chatHistories = {};
+            localStorage.removeItem('whatsForDinner_chats');
+            
             shuffleArray(currentQueue);
             renderStack();
             updateResultsList();
-            
-            // Send user straight back to the home screen
             switchTab('swipe-view', document.getElementById('nav-home'));
         }
 
         function narrowDown() {
-            if (yesses.length === 0) {
-                alert("You didn't say yes to anything! Restarting stack.");
-                startOver();
-                return;
-            }
-            if (yesses.length === 1) {
-                alert(`You only have one choice left! Looks like you're eating at ${yesses[0].name}!`);
-                return;
-            }
-            currentQueue = [...yesses];
-            yesses = [];
-            shuffleArray(currentQueue);
-            updateResultsList();
-            switchTab('swipe-view', document.getElementById('nav-home'));
-            renderStack();
+            if (yesses.length === 0) { alert("You didn't say yes to anything! Restarting stack."); startOver(); return; }
+            if (yesses.length === 1) { alert(`You only have one choice left! Looks like you're eating at ${yesses[0].name}!`); return; }
+            currentQueue = [...yesses]; yesses = []; shuffleArray(currentQueue); updateResultsList();
+            switchTab('swipe-view', document.getElementById('nav-home')); renderStack();
         }
 
         function updateCardDOM(index) {
             const el = document.getElementById(`card-${index}`);
             if (currentQueue.length > index) {
                 const data = currentQueue[index];
-                el.style.display = 'flex';
-                el.style.opacity = '1';
+                el.style.display = 'flex'; el.style.opacity = '1';
                 document.getElementById(`img-${index}`).src = data.image;
                 document.getElementById(`name-${index}`).innerText = data.name;
                 document.getElementById(`dist-${index}`).innerText = data.distance || '';
                 document.getElementById(`time-${index}`).innerText = data.closingTime || '';
-                document.getElementById(`desc-${index}`).innerText = data.description || 'No description provided.';
-            } else {
-                el.style.display = 'none';
-            }
+                document.getElementById(`desc-${index}`).innerText = data.description || '';
+            } else { el.style.display = 'none'; }
         }
 
         function renderStack() {
             const noCardsMsg = document.getElementById('no-cards-msg');
-            
-            // Reset transforms immediately
-            card0.style.transition = 'none';
-            card0.style.transform = 'translate(0px, 0px) rotate(0deg)';
-            card1.style.transition = 'none';
-            card1.style.transform = 'scale(0.95) translateY(10px)';
-            card2.style.transition = 'none';
-            card2.style.transform = 'scale(0.9) translateY(20px)';
-
-            if (currentQueue.length === 0) {
-                card0.style.display = 'none';
-                card1.style.display = 'none';
-                card2.style.display = 'none';
-                noCardsMsg.style.display = 'block';
-                return;
-            }
-
-            noCardsMsg.style.display = 'none';
-            updateCardDOM(0);
-            updateCardDOM(1);
-            updateCardDOM(2);
+            card0.style.transition = 'none'; card0.style.transform = 'translate(0px, 0px) rotate(0deg)';
+            card1.style.transition = 'none'; card1.style.transform = 'scale(0.95) translateY(10px)';
+            card2.style.transition = 'none'; card2.style.transform = 'scale(0.9) translateY(20px)';
+            if (currentQueue.length === 0) { card0.style.display = 'none'; card1.style.display = 'none'; card2.style.display = 'none'; noCardsMsg.style.display = 'block'; return; }
+            noCardsMsg.style.display = 'none'; updateCardDOM(0); updateCardDOM(1); updateCardDOM(2);
         }
 
         function vote(isYes) {
             const current = currentQueue.shift();
-            if (isYes) {
-                yesses.push(current);
-                updateResultsList();
-            }
-            renderStack(); // Immediately pull next card forward
+            if (isYes) { yesses.push(current); updateResultsList(); }
+            renderStack();
         }
 
         function animateVote(isYes) {
             if(currentQueue.length === 0) return;
-            
             const moveOutWidth = window.innerWidth * 1.5;
-            card0.style.transition = 'transform 0.4s ease-out';
-            card1.style.transition = 'transform 0.4s ease-out';
-            card2.style.transition = 'transform 0.4s ease-out';
-            
-            // Animate top card away
-            if (isYes) {
-                card0.style.transform = `translate(${moveOutWidth}px, 50px) rotate(30deg)`;
-            } else {
-                card0.style.transform = `translate(-${moveOutWidth}px, 50px) rotate(-30deg)`;
-            }
-
-            // Animate cards behind it moving up to replace it
-            card1.style.transform = 'scale(1) translateY(0px)';
-            card2.style.transform = 'scale(0.95) translateY(10px)';
-
-            setTimeout(() => {
-                vote(isYes);
-            }, 400);
+            card0.style.transition = 'transform 0.4s ease-out'; card1.style.transition = 'transform 0.4s ease-out'; card2.style.transition = 'transform 0.4s ease-out';
+            if (isYes) card0.style.transform = `translate(${moveOutWidth}px, 50px) rotate(30deg)`; else card0.style.transform = `translate(-${moveOutWidth}px, 50px) rotate(-30deg)`;
+            card1.style.transform = 'scale(1) translateY(0px)'; card2.style.transform = 'scale(0.95) translateY(10px)';
+            setTimeout(() => { vote(isYes); }, 400);
         }
 
         // --- SWIPE EVENT HANDLERS ---
         function setupSwipe() {
-            card0.addEventListener('touchstart', handleDragStart);
-            document.addEventListener('touchmove', handleDragMove, { passive: false });
-            document.addEventListener('touchend', handleDragEnd);
-
-            card0.addEventListener('mousedown', handleDragStart);
-            document.addEventListener('mousemove', handleDragMove);
-            document.addEventListener('mouseup', handleDragEnd);
+            card0.addEventListener('touchstart', handleDragStart); document.addEventListener('touchmove', handleDragMove, { passive: false }); document.addEventListener('touchend', handleDragEnd);
+            card0.addEventListener('mousedown', handleDragStart); document.addEventListener('mousemove', handleDragMove); document.addEventListener('mouseup', handleDragEnd);
         }
-
-        function handleDragStart(e) {
-            if (e.target.closest('button')) return;
-            isDragging = true;
-            startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-            card0.style.transition = 'none';
-            card1.style.transition = 'none';
-        }
-
+        function handleDragStart(e) { if (e.target.closest('button')) return; isDragging = true; startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX; card0.style.transition = 'none'; card1.style.transition = 'none'; }
         function handleDragMove(e) {
-            if (!isDragging) return;
-            if(e.cancelable) e.preventDefault(); 
-            
-            const x = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-            currentX = x - startX;
-            const rotate = currentX * 0.05;
-            
-            // Move top card
+            if (!isDragging) return; if(e.cancelable) e.preventDefault(); 
+            const x = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX; currentX = x - startX; const rotate = currentX * 0.05;
             card0.style.transform = `translate(${currentX}px, 0) rotate(${rotate}deg)`;
-            
-            // Parallax scale the card behind it
             const progress = Math.min(Math.abs(currentX) / (window.innerWidth * 0.5), 1);
-            const scale1 = 0.95 + (0.05 * progress);
-            const y1 = 10 - (10 * progress);
-            card1.style.transform = `scale(${scale1}) translateY(${y1}px)`;
+            card1.style.transform = `scale(${0.95 + (0.05 * progress)}) translateY(${10 - (10 * progress)}px)`;
         }
-
         function handleDragEnd() {
-            if (!isDragging) return;
-            isDragging = false;
-            const threshold = window.innerWidth * 0.25;
-
-            if (currentX > threshold) {
-                animateVote(true);
-            } else if (currentX < -threshold) {
-                animateVote(false);
-            } else {
-                // Snap back
-                card0.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                card0.style.transform = 'translate(0px, 0px) rotate(0deg)';
-                card1.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                card1.style.transform = 'scale(0.95) translateY(10px)';
-            }
+            if (!isDragging) return; isDragging = false; const threshold = window.innerWidth * 0.25;
+            if (currentX > threshold) animateVote(true); else if (currentX < -threshold) animateVote(false);
+            else { card0.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; card0.style.transform = 'translate(0px, 0px) rotate(0deg)'; card1.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; card1.style.transform = 'scale(0.95) translateY(10px)'; }
             currentX = 0;
         }
 
-        // --- MATCHES & CHAT LOGIC ---
+        // --- MATCHES & PERSISTENT CHAT LOGIC ---
         function updateResultsList() {
-            const listEl = document.getElementById('yesses-list');
-            listEl.innerHTML = '';
-
-            if (yesses.length === 0) {
-                listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text); pointer-events:none;">No matches yet! Keep swiping.</li>';
-            } else {
+            const listEl = document.getElementById('yesses-list'); listEl.innerHTML = '';
+            if (yesses.length === 0) { listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text); pointer-events:none;">No matches yet! Keep swiping.</li>'; } 
+            else {
                 yesses.forEach((item, index) => {
-                    const li = document.createElement('li');
-                    li.onclick = () => openChat(index);
-                    li.innerHTML = `
-                        <img src="${item.image}" alt="${item.name}"> 
-                        <div class="list-info">
-                            <strong>${item.name}</strong>
-                            <small>${item.distance || ''}</small>
-                        </div>
-                        <span class="chat-icon">💬</span>
-                    `;
+                    const li = document.createElement('li'); li.onclick = () => openChat(index);
+                    li.innerHTML = `<img src="${item.image}" alt="${item.name}"> <div class="list-info"><strong>${item.name}</strong><small>${item.distance || ''}</small></div><span class="chat-icon">💬</span>`;
                     listEl.appendChild(li);
                 });
             }
         }
 
+        function loadChats() { chatHistories = JSON.parse(localStorage.getItem('whatsForDinner_chats')) || {}; }
+        function saveChats() { localStorage.setItem('whatsForDinner_chats', JSON.stringify(chatHistories)); }
+
         function openChat(index) {
             const place = yesses[index];
+            activeChatName = place.name;
             document.getElementById('chat-img').src = place.image;
             document.getElementById('chat-name').innerText = place.name;
-            
-            const msgContainer = document.getElementById('chat-messages');
-            msgContainer.innerHTML = '<div class="chat-spacer"></div>'; // Reset and add spacer
-            
-            // Switch to chat view 
             document.getElementById('chat-view').classList.add('active');
-
-            // Select a random conversation array from messages.js
-            let lines = ["Hey there!", "Ready to eat?"]; // Default fallback
-            if (typeof restaurantPickupLines !== 'undefined' && restaurantPickupLines.length > 0) {
-                lines = restaurantPickupLines[Math.floor(Math.random() * restaurantPickupLines.length)];
+            
+            // Check if we already have a conversation going
+            if (!chatHistories[activeChatName]) {
+                chatHistories[activeChatName] = []; // initialize
+                
+                // Pick random lines from messages.js
+                let rawLines = ["Hey there!", "Ready to eat?"]; // Default fallback
+                if (typeof restaurantPickupLines !== 'undefined' && restaurantPickupLines.length > 0) {
+                    rawLines = restaurantPickupLines[Math.floor(Math.random() * restaurantPickupLines.length)];
+                }
+                
+                // Replace {firstName} with actual profile name
+                let myName = document.getElementById('profile-fname').value.trim() || "Cutie";
+                let finalLines = rawLines.map(line => line.replace(/{firstName}/g, myName));
+                
+                renderChatWindow(true); // render empty first
+                simulateTyping(finalLines); // then simulate the new intro
+            } else {
+                renderChatWindow(false); // Just instantly render saved history
             }
+        }
 
-            simulateTyping(lines);
+        function renderChatWindow(isEmpty) {
+            const msgContainer = document.getElementById('chat-messages');
+            msgContainer.innerHTML = '<div class="chat-spacer"></div>';
+            
+            if(!isEmpty && chatHistories[activeChatName]) {
+                chatHistories[activeChatName].forEach(msg => {
+                    const bubble = document.createElement('div');
+                    bubble.className = msg.sender === 'them' ? 'msg-bubble msg-left' : 'msg-bubble msg-right';
+                    bubble.innerText = msg.text;
+                    // disable animation for instant render
+                    bubble.style.animation = 'none'; 
+                    msgContainer.appendChild(bubble);
+                });
+                msgContainer.scrollTop = msgContainer.scrollHeight;
+            }
+        }
+
+        function pushMessageToHistory(sender, text) {
+            chatHistories[activeChatName].push({ sender: sender, text: text });
+            saveChats();
         }
 
         function simulateTyping(lines) {
             const msgContainer = document.getElementById('chat-messages');
             let delay = 600;
-            
             lines.forEach(line => {
                 setTimeout(() => {
                     const bubble = document.createElement('div');
@@ -709,14 +441,13 @@
                     bubble.innerText = line;
                     msgContainer.appendChild(bubble);
                     msgContainer.scrollTop = msgContainer.scrollHeight;
+                    pushMessageToHistory('them', line);
                 }, delay);
-                delay += 1500; // Wait 1.5 seconds before next message
+                delay += 1500; 
             });
         }
 
-        function handleEnter(e) {
-            if(e.key === 'Enter') sendUserMessage();
-        }
+        function handleEnter(e) { if(e.key === 'Enter') sendUserMessage(); }
 
         function sendUserMessage() {
             const input = document.getElementById('chat-input');
@@ -724,8 +455,6 @@
             if(!text) return;
             
             const msgContainer = document.getElementById('chat-messages');
-            
-            // Add user message
             const bubble = document.createElement('div');
             bubble.className = 'msg-bubble msg-right';
             bubble.innerText = text;
@@ -733,128 +462,59 @@
             msgContainer.scrollTop = msgContainer.scrollHeight;
             input.value = '';
             
-            // Automated cheeky reply to user
+            pushMessageToHistory('me', text);
+            
             setTimeout(() => {
+                let myName = document.getElementById('profile-fname').value.trim() || "Cutie";
+                const replyText = `I'm just a food app, ${myName}, but I like your style. 😉🍔`;
                 const reply = document.createElement('div');
                 reply.className = 'msg-bubble msg-left';
-                reply.innerText = "I'm just a food app, but I like your style. 😉🍔";
+                reply.innerText = replyText;
                 msgContainer.appendChild(reply);
                 msgContainer.scrollTop = msgContainer.scrollHeight;
+                pushMessageToHistory('them', replyText);
             }, 1200);
         }
 
-        function closeChat() {
-            document.getElementById('chat-view').classList.remove('active');
-        }
+        function closeChat() { document.getElementById('chat-view').classList.remove('active'); activeChatName = ""; }
 
         // --- SETTINGS / MODAL LOGIC ---
-        function openSettingsTab(navElement) {
-            renderSettingsList();
-            switchTab('settings-view', navElement);
-        }
-
+        function openSettingsTab(navElement) { renderSettingsList(); switchTab('settings-view', navElement); }
         function renderSettingsList() {
-            const listEl = document.getElementById('manage-list');
-            listEl.innerHTML = '';
-            if(allRestaurants.length === 0) {
-                listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text); pointer-events:none;">Your stack is empty!</li>';
-                return;
-            }
+            const listEl = document.getElementById('manage-list'); listEl.innerHTML = '';
+            if(allRestaurants.length === 0) { listEl.innerHTML = '<li style="justify-content:center; color:var(--secondary-text); pointer-events:none;">Your stack is empty!</li>'; return; }
             allRestaurants.forEach((item, index) => {
                 const li = document.createElement('li');
-                li.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}">
-                    <div class="list-info"><strong>${item.name}</strong></div>
-                    <div class="action-btns">
-                        <button class="btn-sm btn-edit" onclick="openModal(${index})">Edit</button>
-                        <button class="btn-sm btn-delete" onclick="deleteRestaurant(${index})">Del</button>
-                    </div>
-                `;
+                li.innerHTML = `<img src="${item.image}" alt="${item.name}"><div class="list-info"><strong>${item.name}</strong></div><div class="action-btns"><button class="btn-sm btn-edit" onclick="openModal(${index})">Edit</button><button class="btn-sm btn-delete" onclick="deleteRestaurant(${index})">Del</button></div>`;
                 listEl.appendChild(li);
             });
         }
-
         function openModal(index = -1) {
-            editingIndex = index;
-            const titleEl = document.getElementById('modal-title');
-            if(index > -1) {
-                titleEl.innerText = "Edit Restaurant";
-                const place = allRestaurants[index];
-                document.getElementById('m-name').value = place.name || '';
-                document.getElementById('m-distance').value = place.distance || '';
-                document.getElementById('m-time').value = place.closingTime || '';
-                document.getElementById('m-desc').value = place.description || '';
-                document.getElementById('m-url').value = place.image || '';
-            } else {
-                titleEl.innerText = "Add New Restaurant";
-                document.getElementById('m-name').value = '';
-                document.getElementById('m-distance').value = '';
-                document.getElementById('m-time').value = '';
-                document.getElementById('m-desc').value = '';
-                document.getElementById('m-url').value = '';
-            }
+            editingIndex = index; const titleEl = document.getElementById('modal-title');
+            if(index > -1) { titleEl.innerText = "Edit Restaurant"; const place = allRestaurants[index]; document.getElementById('m-name').value = place.name || ''; document.getElementById('m-distance').value = place.distance || ''; document.getElementById('m-time').value = place.closingTime || ''; document.getElementById('m-desc').value = place.description || ''; document.getElementById('m-url').value = place.image || ''; } 
+            else { titleEl.innerText = "Add New Restaurant"; document.getElementById('m-name').value = ''; document.getElementById('m-distance').value = ''; document.getElementById('m-time').value = ''; document.getElementById('m-desc').value = ''; document.getElementById('m-url').value = ''; }
             document.getElementById('edit-modal').style.display = 'flex';
         }
-
         function closeModal() { document.getElementById('edit-modal').style.display = 'none'; editingIndex = -1; }
-
         function saveRestaurant() {
-            const name = document.getElementById('m-name').value.trim();
-            const distance = document.getElementById('m-distance').value.trim();
-            const time = document.getElementById('m-time').value.trim();
-            const desc = document.getElementById('m-desc').value.trim();
-            const url = document.getElementById('m-url').value.trim();
+            const name = document.getElementById('m-name').value.trim(); const distance = document.getElementById('m-distance').value.trim(); const time = document.getElementById('m-time').value.trim(); const desc = document.getElementById('m-desc').value.trim(); const url = document.getElementById('m-url').value.trim();
             if (!name || !url) { alert("Please enter at least a Name and an Image URL."); return; }
             const placeData = { name: name, distance: distance, closingTime: time, description: desc, image: url };
             if (editingIndex > -1) { allRestaurants[editingIndex] = placeData; } else { allRestaurants.push(placeData); }
             saveRestaurants(); closeModal(); renderSettingsList(); startOver();
         }
-
-        function deleteRestaurant(index) {
-            if(confirm(`Delete ${allRestaurants[index].name}?`)) {
-                allRestaurants.splice(index, 1); saveRestaurants(); renderSettingsList(); startOver();
-            }
-        }
-
-        function exportData() {
-            if (allRestaurants.length === 0) return alert("You don't have any data to export.");
-            const data = JSON.stringify(allRestaurants);
-            navigator.clipboard.writeText(data).then(() => alert("Data copied! Paste it into a note to save it."))
-            .catch(() => prompt("Your browser blocked the clipboard. Copy the data below:", data));
-        }
-
-        function importData() {
-            const input = prompt("Paste your previously copied data here:");
-            if (!input) return;
-            try {
-                const parsed = JSON.parse(input);
-                if (Array.isArray(parsed)) { allRestaurants = parsed; saveRestaurants(); alert("Data imported successfully!"); renderSettingsList(); startOver(); } 
-                else { alert("Invalid data format."); }
-            } catch(e) { alert("Error importing data. Make sure you pasted exactly what was copied."); }
-        }
-
-        function resetToDefaults() {
-            if(confirm("Are you sure? This will wipe your current list and restore the defaults.")) {
-                allRestaurants = JSON.parse(JSON.stringify(defaultRestaurants)); saveRestaurants(); alert("Restored to defaults!"); renderSettingsList(); startOver();
-            }
-        }
-
+        function deleteRestaurant(index) { if(confirm(`Delete ${allRestaurants[index].name}?`)) { allRestaurants.splice(index, 1); saveRestaurants(); renderSettingsList(); startOver(); } }
+        function exportData() { if (allRestaurants.length === 0) return alert("You don't have any data to export."); const data = JSON.stringify(allRestaurants); navigator.clipboard.writeText(data).then(() => alert("Data copied! Paste it into a note to save it.")).catch(() => prompt("Your browser blocked the clipboard. Copy the data below:", data)); }
+        function importData() { const input = prompt("Paste your previously copied data here:"); if (!input) return; try { const parsed = JSON.parse(input); if (Array.isArray(parsed)) { allRestaurants = parsed; saveRestaurants(); alert("Data imported successfully!"); renderSettingsList(); startOver(); } else { alert("Invalid data format."); } } catch(e) { alert("Error importing data. Make sure you pasted exactly what was copied."); } }
+        function resetToDefaults() { if(confirm("Are you sure? This will wipe your current list and restore the defaults.")) { allRestaurants = JSON.parse(JSON.stringify(defaultRestaurants)); saveRestaurants(); alert("Restored to defaults!"); renderSettingsList(); startOver(); } }
+        
         function switchTab(viewId, navElement) {
             document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
-            if(navElement) {
-                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-                navElement.classList.add('active');
-            }
+            if(navElement) { document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); navElement.classList.add('active'); }
         }
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-
+        function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } }
+        
         window.onload = initApp;
     </script>
 </body>

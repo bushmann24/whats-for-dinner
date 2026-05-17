@@ -1,0 +1,17 @@
+{
+  "name": "Whats for Dinner",
+  "short_name": "DinnerApp",
+  "description": "Tinder for Food",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#ff4b4b",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

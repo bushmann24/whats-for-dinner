@@ -1,8 +1,15 @@
 // messages.js
-// You can add as many arrays in here as you want! 
-// Each array is a sequence of messages the restaurant will send.
+// Use {firstName} anywhere, and the app will replace it with the user's profile name!
 
 const restaurantPickupLines = [
+    [
+        "Heeeyyy {firstName} 😉",
+        "I heard you were looking for a snack.", 
+        "But I'm the whole meal. 🍔"
+    ],
+    [
+        "Hey baby..."
+    ],
     [
         "Hey 😏", 
         "Want to see whats in between my buns?"
@@ -12,15 +19,15 @@ const restaurantPickupLines = [
         "Because I'm hot, ready, and 5 minutes away 🍕"
     ],
     [
-        "I heard you were looking for a snack.", 
-        "But I'm the whole meal. 🍔"
+        "You look delicious today, {firstName}.",
+        "Almost as delicious as my fries. 🍟"
     ],
     [
-        "You must be starving.", 
-        "Let me satisfy that craving. 🌮"
-    ],
-    [
+        "Damn {firstName}...",
         "I like my dates like I like my pizza...", 
         "Extra cheesy and at your door in 30 minutes or less. 😉"
+    ],
+    [
+        "I don't usually send the first message, but for you I'll make an exception. 🌮"
     ]
 ];
